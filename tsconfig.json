@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "outDir": "./lib",
+    "baseUrl": "./",
+    "incremental": true
+  },
+  "exclude": ["node_modules", "dist", "lib"]
+}

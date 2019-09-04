@@ -1,0 +1,55 @@
+{
+  "name": "purple-cheetah",
+  "version": "1.0.5",
+  "description": "Framework for node/express applications. Do not use, still in development.",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "start": "node dist/main.js",
+    "dev": "nodemon src/main.ts",
+    "node-dev": "node src/main.ts",
+    "build": "tsc -p .",
+    "test": "mocha ./test --recursive --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bbanez/application-express.git"
+  },
+  "keywords": [],
+  "author": "Branislav Vajagić",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bbanez/application-express/issues"
+  },
+  "homepage": "https://github.com/Bbanez/application-express#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "eureka-js-client": "^4.5.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^14.4.2",
+    "mongoose": "^5.6.9",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/body-parser": "^1.17.0",
+    "@types/cors": "^2.8.5",
+    "@types/eureka-js-client": "^4.4.2",
+    "@types/express": "^4.17.0",
+    "@types/express-graphql": "^0.8.0",
+    "@types/graphql": "^14.2.3",
+    "@types/mongoose": "^5.5.12",
+    "@types/node": "^12.7.1",
+    "@types/socket.io": "^2.1.2",
+    "@types/socket.io-client": "^1.4.32",
+    "nodemon": "^1.19.1",
+    "ts-node": "^8.3.0",
+    "tsconfig-paths": "^3.8.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  }
+}
