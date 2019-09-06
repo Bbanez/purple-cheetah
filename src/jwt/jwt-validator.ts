@@ -1,9 +1,10 @@
-import { JWTAuth } from './jwt-auth.util';
+import { JWTAuth } from './jwt-auth';
 import { Permission, PermissionName } from './models/jwt-permission.model';
 import { RoleName } from './models/jwt-role.model';
+import { JWTEncoding } from './jwt-encoding';
 
 export class JWTValidator {
-  public static validate(
+  public static bearerTokenValidate(
     authorization: string | undefined,
     roleNames: RoleName[],
     permissionName: PermissionName,
@@ -18,7 +19,7 @@ export class JWTValidator {
     if (!authorization) {
       throw error.occurred(400, 'Missing authorization data.');
     }
-    const jwt = JWTAuth.decode(authorization);
+    const jwt = JWTEncoding.decode(authorization);
     if (jwt instanceof Error) {
       throw error.occurred(401, jwt.message);
     }

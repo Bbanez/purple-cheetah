@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import { RefreshToken } from '../jwt-refresh-token.model';
-import { JWTConfig } from '../../jwt-config.util';
+import { JWTConfig } from '../../jwt-config';
 
 export class RefreshTokenFactory {
   public static get instance(): RefreshToken {

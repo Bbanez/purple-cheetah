@@ -5,8 +5,8 @@ import { JWTHeaderFactory } from './jwt-header.factory';
 import { JWT } from '../jwt.model';
 import { JWTPayload } from '../jwt-payload.model';
 import { Role } from '../jwt-role.model';
-import { JWTConfig } from '../../jwt-config.util';
-import { JWTAuth } from '../../jwt-auth.util';
+import { JWTConfig } from '../../jwt-config';
+import { JWTAuth } from '../../jwt-auth';
 
 export class JWTFactory {
   public static get instance(): JWT {

@@ -1,5 +1,5 @@
 import { JWTPayload } from '../jwt-payload.model';
-import { JWTConfig } from '../../jwt-config.util';
+import { JWTConfig } from '../../jwt-config';
 
 export class JWTPayloadFactory {
   public static get instance(): JWTPayload {

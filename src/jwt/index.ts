@@ -1,6 +1,7 @@
-export * from './jwt-auth.util';
-export * from './jwt-config.util';
-export * from './jwt-validator.util';
+export * from './jwt-auth';
+export * from './jwt-config';
+export * from './jwt-validator';
+export * from './jwt-encoding';
 
 export * from './models/jwt-header.model';
 export * from './models/jwt-payload.model';
