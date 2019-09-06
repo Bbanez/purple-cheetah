@@ -19,14 +19,21 @@ export interface MiracleResponse {
   error?: any;
 }
 
+export interface MiracleService {
+  name: string;
+  url: string;
+}
+
 export class MiracleClient {
   private tokenUnpacked?: JWT;
+  private connected: boolean = false;
+  private services: MiracleService[];
 
   constructor(
-    private readonly defaultRequestConfig: MiracleRequest,
     private readonly serviceName: string,
     private readonly secret: string,
     private readonly requestAccessTokenUrl: string,
+    private readonly defaultRequestConfig?: MiracleRequest,
     private token?: string,
   ) {
     if (this.token) {
@@ -39,9 +46,15 @@ export class MiracleClient {
   }
 
   public async request(config: MiracleRequest): Promise<MiracleResponse> {
-    const conf: MiracleRequest = JSON.parse(
-      JSON.stringify(this.defaultRequestConfig),
-    );
+    let conf: MiracleRequest;
+    if (this.defaultRequestConfig) {
+      conf = JSON.parse(JSON.stringify(this.defaultRequestConfig));
+    } else {
+      conf = {
+        url: '',
+        method: 'GET',
+      };
+    }
     conf.url = conf.url + config.url;
     conf.method = config.method;
     if (!conf.headers) {
@@ -62,9 +75,10 @@ export class MiracleClient {
     if (
       !this.tokenUnpacked ||
       this.tokenUnpacked.payload.iat + this.tokenUnpacked.payload.exp <
-        Date.now()
+        Date.now() ||
+      this.connected === false
     ) {
-      await this.requestAccessToken();
+      await this.connect();
     }
     try {
       const result = await Axios(conf);
@@ -89,7 +103,7 @@ export class MiracleClient {
     }
   }
 
-  private async requestAccessToken(): Promise<void> {
+  public async connect(): Promise<void> {
     const timestamp = Date.now();
     const nonce = crypto.randomBytes(6).toString('base64');
     const hmac: crypto.Hmac = crypto.createHmac('sha256', this.secret);
@@ -115,6 +129,8 @@ export class MiracleClient {
       },
     });
     this.token = result.data.accessToken;
+    this.services = result.data.services;
+    this.connected = true;
     const tokenUnpacked = JWTEncoding.decode(this.token);
     if (tokenUnpacked instanceof Error) {
       throw tokenUnpacked;
