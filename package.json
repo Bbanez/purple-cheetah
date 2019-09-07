@@ -1,6 +1,6 @@
 {
   "name": "purple-cheetah",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "description": "Framework for node/express applications. Do not use, still in development.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,15 +13,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bbanez/application-express.git"
+    "url": "git+https://github.com/Bbanez/purple-cheetah.git"
   },
   "keywords": [],
   "author": "Branislav Vajagić",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Bbanez/application-express/issues"
+    "url": "https://github.com/Bbanez/purple-cheetah/issues"
   },
-  "homepage": "https://github.com/Bbanez/application-express#readme",
+  "homepage": "https://github.com/Bbanez/purple-cheetah#readme",
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",

@@ -16,7 +16,7 @@ export function EnableMiracle(config: {
       config.client.requestAccessTokenUrl,
       config.client.defaultRequestConfig,
     );
-    await miracleClient.requestAccessToken();
+    await miracleClient.connect();
     Miracle.setClient(miracleClient);
   };
 }
