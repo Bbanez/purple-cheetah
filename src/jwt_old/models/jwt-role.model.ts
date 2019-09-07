@@ -7,6 +7,7 @@ export enum RoleName {
   ADMIN = 'ADMIN',
   OWNER = 'OWNER',
   MANAGER = 'MANAGER',
+  SERVICE = 'SERVICE',
 
   EDITOR = 'EDITOR',
   SUPPORT = 'SUPPORT',

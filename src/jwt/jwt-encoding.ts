@@ -1,8 +1,7 @@
-import { JWT } from './models/jwt.model';
-import { JWTHeader } from './models/jwt-header.model';
-import { JWTHeaderFactory } from './models/factories/jwt-header.factory';
-import { JWTPayload } from './models/jwt-payload.model';
-import { JWTPayloadFactory } from './models/factories/jwt-payload.factory';
+import { JWT } from './interfaces/jwt.interface';
+import { JWTHeader } from './interfaces/jwt-header.interface';
+import { JWTPayload } from './interfaces/jwt-payload.interface';
+import { ObjectUtility } from 'src/util/object.util';
 
 export class JWTEncoding {
   public static encode(jwt: JWT): string {
@@ -20,16 +19,90 @@ export class JWTEncoding {
       return new Error('Access token parts length is != 3.');
     }
     try {
-      const header: JWTHeader = JWTHeaderFactory.fromJSON(
-        JSON.parse(Buffer.from(parts[0], 'base64').toString()),
+      const header: JWTHeader = JSON.parse(
+        Buffer.from(parts[0], 'base64').toString(),
       );
-      const payload: JWTPayload = JWTPayloadFactory.fromJSON(
-        JSON.parse(Buffer.from(parts[1], 'base64').toString()),
+      const payload: JWTPayload = JSON.parse(
+        Buffer.from(parts[1], 'base64').toString(),
       );
-      const jwt: JWT = new JWT(header, payload, parts[2]);
+      try {
+        ObjectUtility.compareWithSchema(
+          header,
+          {
+            type: {
+              __type: 'string',
+              __required: true,
+            },
+            alg: {
+              __type: 'string',
+              __required: true,
+            },
+          },
+          'token.header',
+        );
+        ObjectUtility.compareWithSchema(
+          payload,
+          {
+            jti: {
+              __type: 'string',
+              __required: true,
+            },
+            iss: {
+              __type: 'string',
+              __required: true,
+            },
+            iat: {
+              __type: 'number',
+              __required: true,
+            },
+            exp: {
+              __type: 'number',
+              __required: true,
+            },
+            userId: {
+              __type: 'string',
+              __required: true,
+            },
+            roles: {
+              __type: 'array',
+              __required: true,
+              __child: {
+                __type: 'object',
+                __content: {
+                  name: {
+                    __type: 'string',
+                    __required: true,
+                  },
+                  permissions: {
+                    __type: 'array',
+                    __required: true,
+                    __child: {
+                      __type: 'object',
+                      __content: {
+                        name: {
+                          __type: 'string',
+                          __required: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          'token.payload',
+        );
+      } catch (e) {
+        return e;
+      }
+      const jwt: JWT = {
+        header,
+        payload,
+        signature: parts[2],
+      };
       return jwt;
     } catch (error) {
-      return new Error('Bad encoding.');
+      return new Error('Bad token encoding.');
     }
   }
 

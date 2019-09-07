@@ -10,9 +10,7 @@ export class JWTPayloadFactory {
       Date.now() + JWTConfig.get('expIn'),
       '',
       [],
-      {
-        companyId: '',
-      },
+      {},
     );
   }
 

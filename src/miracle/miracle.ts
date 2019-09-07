@@ -1,13 +1,13 @@
-import { MiracleClient } from './miracle-client.module';
+import { MiracleConnection } from './miracle-connection';
 
 export class Miracle {
-  private static miracleClient?: MiracleClient;
+  private static miracleConnection?: MiracleConnection;
 
-  public static get client() {
-    return JSON.parse(JSON.stringify(this.miracleClient));
+  public static get connection() {
+    return this.miracleConnection;
   }
 
-  public static setClient(client: MiracleClient) {
-    this.miracleClient = JSON.parse(JSON.stringify(client));
+  public static setConnection(connection: MiracleConnection) {
+    this.miracleConnection = JSON.parse(JSON.stringify(connection));
   }
 }

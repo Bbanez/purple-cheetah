@@ -1,39 +1,26 @@
 import * as crypto from 'crypto';
-import Axios, { Method } from 'axios';
+import Axios from 'axios';
+
 import { JWT, JWTEncoding } from '../jwt';
+import { MiracleRequest } from './interfaces/miracle-request.interface';
+import { MiracleResponse } from './interfaces/miracle-response.interface';
 
-export interface MiracleRequest {
-  url: string;
-  method: Method;
-  headers?: any;
-  data?: any;
-}
-
-export interface MiracleResponse {
-  success: boolean;
-  response?: {
-    status: number;
-    headers: any;
-    data: any;
-  };
-  error?: any;
-}
-
-export interface MiracleService {
-  name: string;
-  url: string;
-}
-
-export class MiracleClient {
+export class MiracleConnection {
   private tokenUnpacked?: JWT;
   private connected: boolean = false;
-  private services: MiracleService[];
+  private services: Array<{
+    name: string;
+    url: string;
+  }>;
 
   constructor(
     private readonly serviceName: string,
     private readonly secret: string,
-    private readonly requestAccessTokenUrl: string,
-    private readonly defaultRequestConfig?: MiracleRequest,
+    private readonly connectionUrl: string,
+    private readonly defaultHeaders?: Array<{
+      key: string;
+      value: string;
+    }>,
     private token?: string,
   ) {
     if (this.token) {
@@ -46,32 +33,32 @@ export class MiracleClient {
   }
 
   public async request(config: MiracleRequest): Promise<MiracleResponse> {
-    let conf: MiracleRequest;
-    if (this.defaultRequestConfig) {
-      conf = JSON.parse(JSON.stringify(this.defaultRequestConfig));
-    } else {
-      conf = {
-        url: '',
-        method: 'GET',
-      };
+    if (!config.headers) {
+      config.headers = {};
     }
-    conf.url = conf.url + config.url;
-    conf.method = config.method;
-    if (!conf.headers) {
-      conf.headers = {
-        Authorization: this.token,
-      };
-    }
-    if (config.headers) {
+    if (this.defaultHeaders) {
       // tslint:disable-next-line: forin
-      for (const key in config.headers) {
-        conf.headers[key] = config.headers[key];
+      for (const i in this.defaultHeaders) {
+        config.headers[this.defaultHeaders[i].key] = this.defaultHeaders[
+          i
+        ].value;
       }
     }
-    if (config.data && typeof config.data === 'object') {
-      conf.headers['Content-Type'] = 'application/json';
+    const targetService = this.services.find(
+      e => e.name === config.serviceName,
+    );
+    if (!targetService) {
+      return {
+        success: false,
+        error: new Error(
+          `Service with name '${config.serviceName}' does not exist.`,
+        ),
+      };
     }
-    conf.data = config.data;
+    const url = targetService.url + config.uri;
+    if (config.data && typeof config.data === 'object') {
+      config.headers['Content-Type'] = 'application/json';
+    }
     if (
       !this.tokenUnpacked ||
       this.tokenUnpacked.payload.iat + this.tokenUnpacked.payload.exp <
@@ -80,8 +67,14 @@ export class MiracleClient {
     ) {
       await this.connect();
     }
+    config.headers.Authorization = 'Bearer ' + this.token;
     try {
-      const result = await Axios(conf);
+      const result = await Axios({
+        url,
+        method: config.method,
+        headers: config.headers,
+        data: config.data,
+      });
       return {
         success: true,
         response: {
@@ -116,13 +109,13 @@ export class MiracleClient {
       Buffer.from(
         JSON.stringify({
           nonce,
-          serviceName: this.serviceName,
+          name: this.serviceName,
           timestamp,
           signature,
         }),
       ).toString('base64');
     const result = await Axios({
-      url: this.requestAccessTokenUrl,
+      url: this.connectionUrl,
       method: 'POST',
       headers: {
         Authorization: authHeader,
