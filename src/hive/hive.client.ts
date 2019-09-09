@@ -6,7 +6,8 @@ import { HiveAuth } from './hive-auth.util';
 import { Logger } from '../logger';
 
 export class HiveClient {
-  private static hiveServerUrl: string;
+  private static hiveServerBaseUrl: string;
+  private static socketServerPath: string;
   private static incomingEventHandlers: Array<{
     eventName: HiveEventName;
     callback: (error?: Error, data?: HiveEventData) => Promise<void>;
@@ -20,7 +21,8 @@ export class HiveClient {
   private static connected: boolean = false;
 
   public static connect(config: {
-    hiveServerUrl: string;
+    hiveServerBaseUrl: string;
+    socketServerPath: string;
     user: {
       key: string;
       secret: string;
@@ -30,7 +32,8 @@ export class HiveClient {
       callback: (error?: Error, data?: HiveEventData) => Promise<void>;
     }>;
   }) {
-    HiveClient.hiveServerUrl = config.hiveServerUrl;
+    HiveClient.hiveServerBaseUrl = config.hiveServerBaseUrl;
+    HiveClient.socketServerPath = config.socketServerPath;
     HiveClient.logger = new Logger('HiveClient');
     HiveClient.user = config.user;
     HiveClient.incomingEventHandlers = config.incomingEventHandlers;
@@ -47,8 +50,12 @@ export class HiveClient {
 
   private static tryToConnectToServer() {
     if (HiveClient.connected === false) {
-      HiveClient.socket = socketIO(HiveClient.hiveServerUrl, {
-        path: '/hive-server/',
+      HiveClient.logger.info(
+        '.tryToConnectToServer',
+        'Trying to connect to Hive Server...',
+      );
+      HiveClient.socket = socketIO(HiveClient.hiveServerBaseUrl, {
+        path: HiveClient.socketServerPath,
         query: HiveClient.signConnectionQuery(),
       });
       HiveClient.socket.on('connect', () => {
@@ -60,9 +67,16 @@ export class HiveClient {
         HiveClient.connected = false;
       });
       HiveClient.incomingEventHandlers.forEach(e => {
+        HiveClient.logger.info(
+          '.tryToConnectToServer',
+          `Mapping done for event '${e.eventName}'.`,
+        );
         HiveClient.socket.on(e.eventName, async (data: HiveEventData) => {
           if (e.eventName !== HiveEventName.GLOBAL_ERROR) {
-            const authError = HiveAuth.messageAuthentication(data, HiveClient.user);
+            const authError = HiveAuth.messageAuthentication(
+              data,
+              HiveClient.user,
+            );
             if (authError) {
               e.callback(authError);
               return;

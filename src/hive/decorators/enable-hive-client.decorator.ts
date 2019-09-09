@@ -4,7 +4,8 @@ import { HiveClient } from '../hive.client';
 import { HiveHttpExceptionHandler } from '../middleware/hive-http-exception.middleware';
 
 export function EnableHiveClient(config: {
-  hiveServerUrl: string;
+  hiveServerBaseUrl: string;
+  socketServerPath: string;
   user: {
     key: string;
     secret: string;
@@ -16,7 +17,8 @@ export function EnableHiveClient(config: {
 }) {
   return (target: any) => {
     HiveClient.connect({
-      hiveServerUrl: config.hiveServerUrl,
+      hiveServerBaseUrl: config.hiveServerBaseUrl,
+      socketServerPath: config.socketServerPath,
       user: config.user,
       incomingEventHandlers: config.incomingEventHandlers,
     });

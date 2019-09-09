@@ -16,24 +16,16 @@ import {
   JWT,
   JWTEncoding,
 } from '../../jwt';
+import { MiracleService } from '../interfaces/miracle-service.interface';
 
 @Controller('/miracle/auth')
 export class MiracleAuthController {
-  private static services: Array<{
-    name: string;
-    secret: string;
-    permissions: Permission[];
-    url: string;
-  }> = [];
+  private static services: MiracleService[] = [];
   @AppLogger(MiracleAuthController)
   private logger: Logger;
 
   constructor(
-    services: Array<{
-      name: string;
-      secret: string;
-      permissions: Permission[];
-    }>,
+    services: MiracleService[],
   ) {
     MiracleAuthController.services = JSON.parse(JSON.stringify(services));
   }

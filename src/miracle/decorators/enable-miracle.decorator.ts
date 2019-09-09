@@ -2,6 +2,8 @@ import { MiracleConnection } from '../miracle-connection';
 import { Miracle } from '../miracle';
 import { MiracleService } from '../interfaces/miracle-service.interface';
 import { MiracleServiceBuffer } from '../miracle-service-buffer';
+import { MiracleAuthController } from '../controllers/miracle-auth.controller';
+import { JWTConfig, JWTConfigService, JWTEncryptionAlg } from '../../jwt';
 
 export function EnableMiracle(config: {
   client?: {
@@ -16,9 +18,15 @@ export function EnableMiracle(config: {
   };
   server?: {
     services: MiracleService[];
+    jwtTokenConfig: {
+      alg: JWTEncryptionAlg,
+      issuer: string,
+      secret: string,
+      expIn: number,
+    };
   };
 }) {
-  return async (target: any) => {
+  return (target: any) => {
     if (config.client) {
       const miracleConnection = new MiracleConnection(
         config.client.serviceName,
@@ -27,13 +35,36 @@ export function EnableMiracle(config: {
         config.client.defaultHeaders,
         config.client.token,
       );
-      await miracleConnection.connect();
-      Miracle.setConnection(miracleConnection);
+      miracleConnection
+        .connect()
+        .then(result => {
+          Miracle.setConnection(miracleConnection);
+        })
+        .catch(e => {
+          throw e;
+        });
     }
     if (config.server) {
       config.server.services.forEach(e => {
         MiracleServiceBuffer.add(e);
       });
+      const token: JWTConfig = {
+        id: 'miracle-token-config',
+        alg: config.server.jwtTokenConfig.alg,
+        expIn: config.server.jwtTokenConfig.expIn,
+        issuer: config.server.jwtTokenConfig.issuer,
+        secret: config.server.jwtTokenConfig.secret,
+      };
+      JWTConfigService.add(token);
+      if (target.prototype.controllers) {
+        target.prototype.controllers.push(
+          new MiracleAuthController(config.server.services),
+        );
+      } else {
+        target.prototype.controllers = [
+          new MiracleAuthController(config.server.services),
+        ];
+      }
     }
   };
 }

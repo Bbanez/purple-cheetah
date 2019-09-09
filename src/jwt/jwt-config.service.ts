@@ -24,7 +24,7 @@ export class JWTConfigService {
           __type: 'string',
           __required: true,
         },
-        exp: {
+        expIn: {
           __type: 'number',
           __required: true,
         },
