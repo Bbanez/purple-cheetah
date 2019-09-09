@@ -1,7 +1,7 @@
 import { JWT } from './interfaces/jwt.interface';
 import { JWTHeader } from './interfaces/jwt-header.interface';
 import { JWTPayload } from './interfaces/jwt-payload.interface';
-import { ObjectUtility } from 'src/util/object.util';
+import { ObjectUtility } from '../util/object.util';
 
 export class JWTEncoding {
   public static encode(jwt: JWT): string {

@@ -27,3 +27,4 @@ export * from './mongoose';
 export * from './ql';
 export * from './jwt';
 export * from './hive';
+export * from './miracle';

@@ -1,5 +1,5 @@
 import { JWTConfig } from './interfaces/jwt-config.interface';
-import { ObjectUtility } from 'src/util/object.util';
+import { ObjectUtility } from '../util/object.util';
 
 export class JWTConfigService {
   private static configs: JWTConfig[] = [];
