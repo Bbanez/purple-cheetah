@@ -4,8 +4,12 @@ import * as crypto from 'crypto';
 import { JWT } from './interfaces/jwt.interface';
 import { JWTEncoding } from './jwt-encoding';
 import { JWTConfig } from './interfaces/jwt-config.interface';
-import { Role } from './interfaces/jwt-role.interface';
+import { Role, RoleName } from './interfaces/jwt-role.interface';
 import { JWTEncryptionAlg } from './interfaces/jwt-header.interface';
+import {
+  Permission,
+  PermissionName,
+} from './interfaces/jwt-permission.interface';
 
 export class JWTSecurity {
   public static createToken(
@@ -76,6 +80,53 @@ export class JWTSecurity {
     const checkSign: string = JWTSecurity.signToken(jwt, config.secret);
     if (checkSign !== jwt.signature) {
       return new Error('Bad token signature.');
+    }
+  }
+
+  public static checkTokenPermissions(
+    jwt: JWT,
+    roleNames: RoleName[],
+    permissionName: PermissionName,
+  ): void | Error {
+    const role = jwt.payload.roles.find(r => {
+      const roleName = roleNames.find(rn => {
+        if (rn === r.name) {
+          return true;
+        }
+        return false;
+      });
+      if (roleName) {
+        return true;
+      }
+      return false;
+    });
+    if (!role) {
+      return new Error('Token is not authorized for this action.');
+    }
+    const permission: Permission | undefined = role.permissions.find(e => {
+      if (e.name === permissionName) {
+        return true;
+      }
+      return false;
+    });
+    if (!permission) {
+      return new Error('Token is not authorized for this action.');
+    }
+  }
+
+  public static validateAndCheckTokenPermissions(
+    jwt: JWT,
+    roleNames: RoleName[],
+    permissionName: PermissionName,
+    config: JWTConfig,
+  ): void | Error {
+    let error = JWTSecurity.validateToken(jwt, config);
+    if (error instanceof Error) {
+      return error;
+    }
+    error = JWTSecurity.checkTokenPermissions(jwt, roleNames, permissionName);
+    if (error instanceof Error) {
+      return error;
     }
   }
 }
