@@ -11,6 +11,9 @@ export class JWTEncoding {
   }
 
   public static decode(jwtAsString: string): JWT | Error {
+    if(!jwtAsString)  {
+      return new Error('Token is `undefined`.'); 
+    }
     if (jwtAsString.startsWith('Bearer ') === true) {
       jwtAsString = jwtAsString.replace('Bearer ', '');
     }
