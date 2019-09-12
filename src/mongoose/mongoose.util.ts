@@ -3,11 +3,28 @@ import { Logger } from '../logger';
 import { AppLogger } from '../decorators/app-logger.decorator';
 
 export interface MongooseConfig {
-  user: string;
-  password: string;
-  host: string;
-  port: number;
-  name: string;
+  selfHosted?: {
+    user: {
+      name: string;
+      password: string;
+    };
+    db: {
+      name: string;
+      host: string;
+      port?: number;
+    };
+  };
+  atlas?: {
+    user: {
+      name: string;
+      password: string;
+    };
+    db: {
+      name: string;
+      cluster: string;
+      readWrite: boolean;
+    };
+  };
 }
 
 export class Mongoose {
@@ -29,25 +46,50 @@ export class Mongoose {
 
   private static async openConnection() {
     if (mongoose.connection.readyState === 0) {
-      try {
-        await mongoose.connect(
+      if (Mongoose.config.selfHosted) {
+        let url: string =
           'mongodb://' +
-            Mongoose.config.user +
-            ':' +
-            Mongoose.config.password +
-            '@' +
-            Mongoose.config.host +
-            ':' +
-            Mongoose.config.port +
-            '/' +
-            Mongoose.config.name,
-          {
+          Mongoose.config.selfHosted.user.name +
+          ':' +
+          Mongoose.config.selfHosted.user.password +
+          '@' +
+          Mongoose.config.selfHosted.db.host;
+        if (Mongoose.config.selfHosted.db.port) {
+          url = url + ':' + Mongoose.config.selfHosted.db.port;
+        }
+        url = url + '/' + Mongoose.config.selfHosted.db.name;
+        try {
+          await mongoose.connect(url, {
             useNewUrlParser: true,
-          },
-        );
-        Mongoose.logger.info('.connect', 'Successful.');
-      } catch (error) {
-        Mongoose.logger.error('.connect', error);
+          });
+          Mongoose.logger.info('.connect', 'Successful.');
+        } catch (error) {
+          Mongoose.logger.error('.connect', error);
+        }
+      } else if (this.config.atlas) {
+        let url: string =
+          'mongodb+srv://' +
+          Mongoose.config.atlas.user.name +
+          ':' +
+          Mongoose.config.atlas.user.password +
+          '@' +
+          Mongoose.config.atlas.db.cluster +
+          '/' +
+          Mongoose.config.atlas.db.name +
+          '?readWrite=' +
+          Mongoose.config.atlas.db.readWrite +
+          '&w=majority';
+        try {
+          await mongoose.connect(url, {
+            useNewUrlParser: true,
+          });
+          Mongoose.logger.info('.connect', 'Successful.');
+        } catch (error) {
+          Mongoose.logger.error('.connect', error);
+        }
+      } else {
+        this.logger.error('.openConnection', 'Invalid configuration.');
+        throw new Error();
       }
     }
   }
