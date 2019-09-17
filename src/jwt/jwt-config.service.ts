@@ -29,7 +29,7 @@ export class JWTConfigService {
           __required: true,
         },
       },
-      'jwtConfig',
+      config.id,
     );
     JWTConfigService.configs.push(config);
   }
