@@ -27,6 +27,14 @@ export function EnableMiracle(config: {
   };
 }) {
   return (target: any) => {
+    const token: JWTConfig = {
+      id: 'miracle-token-config',
+      alg: config.jwtTokenConfig.alg,
+      expIn: config.jwtTokenConfig.expIn,
+      issuer: config.jwtTokenConfig.issuer,
+      secret: config.jwtTokenConfig.secret,
+    };
+    JWTConfigService.add(token);
     if (config.client) {
       const miracleConnection = new MiracleConnection(
         config.client.serviceName,
@@ -48,14 +56,6 @@ export function EnableMiracle(config: {
       config.server.services.forEach(e => {
         MiracleServiceBuffer.add(e);
       });
-      const token: JWTConfig = {
-        id: 'miracle-token-config',
-        alg: config.jwtTokenConfig.alg,
-        expIn: config.jwtTokenConfig.expIn,
-        issuer: config.jwtTokenConfig.issuer,
-        secret: config.jwtTokenConfig.secret,
-      };
-      JWTConfigService.add(token);
       if (target.prototype.controllers) {
         target.prototype.controllers.push(
           new MiracleAuthController(config.server.services),
