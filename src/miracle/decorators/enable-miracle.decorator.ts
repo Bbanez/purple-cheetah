@@ -6,6 +6,12 @@ import { MiracleAuthController } from '../controllers/miracle-auth.controller';
 import { JWTConfig, JWTConfigService, JWTEncryptionAlg } from '../../jwt';
 
 export function EnableMiracle(config: {
+  jwtTokenConfig: {
+    alg: JWTEncryptionAlg,
+    issuer: string,
+    secret: string,
+    expIn: number,
+  };
   client?: {
     serviceName: string;
     secret: string;
@@ -18,12 +24,6 @@ export function EnableMiracle(config: {
   };
   server?: {
     services: MiracleService[];
-    jwtTokenConfig: {
-      alg: JWTEncryptionAlg,
-      issuer: string,
-      secret: string,
-      expIn: number,
-    };
   };
 }) {
   return (target: any) => {
@@ -50,10 +50,10 @@ export function EnableMiracle(config: {
       });
       const token: JWTConfig = {
         id: 'miracle-token-config',
-        alg: config.server.jwtTokenConfig.alg,
-        expIn: config.server.jwtTokenConfig.expIn,
-        issuer: config.server.jwtTokenConfig.issuer,
-        secret: config.server.jwtTokenConfig.secret,
+        alg: config.jwtTokenConfig.alg,
+        expIn: config.jwtTokenConfig.expIn,
+        issuer: config.jwtTokenConfig.issuer,
+        secret: config.jwtTokenConfig.secret,
       };
       JWTConfigService.add(token);
       if (target.prototype.controllers) {

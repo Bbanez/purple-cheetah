@@ -9,7 +9,6 @@ import { Logger } from '../../logger';
 import { HttpStatus } from '../../models/http-status.model';
 import { ObjectUtility } from '../../util/object.util';
 import {
-  Permission,
   RoleName,
   JWTSecurity,
   JWTConfigService,
