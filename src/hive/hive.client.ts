@@ -48,14 +48,14 @@ export class HiveClient {
     }
   }
 
-  private static tryToConnectToServer() {
+  private static async tryToConnectToServer() {
     if (HiveClient.connected === false) {
       HiveClient.logger.info(
         '.tryToConnectToServer',
         'Trying to connect to Hive Server on ' +
         `'${HiveClient.hiveServerBaseUrl}${HiveClient.socketServerPath}' ...`,
       );
-      HiveClient.socket = socketIO(HiveClient.hiveServerBaseUrl, {
+      HiveClient.socket = await socketIO(HiveClient.hiveServerBaseUrl, {
         path: HiveClient.socketServerPath,
         query: HiveClient.signConnectionQuery(),
       });
