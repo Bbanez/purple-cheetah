@@ -52,7 +52,8 @@ export class HiveClient {
     if (HiveClient.connected === false) {
       HiveClient.logger.info(
         '.tryToConnectToServer',
-        'Trying to connect to Hive Server...',
+        'Trying to connect to Hive Server on ' +
+        `'${HiveClient.hiveServerBaseUrl}${HiveClient.socketServerPath}' ...`,
       );
       HiveClient.socket = socketIO(HiveClient.hiveServerBaseUrl, {
         path: HiveClient.socketServerPath,
