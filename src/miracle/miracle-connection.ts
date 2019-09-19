@@ -48,12 +48,9 @@ export class MiracleConnection {
       e => e.name === config.serviceName,
     );
     if (!targetService) {
-      return {
-        success: false,
-        error: new Error(
-          `Service with name '${config.serviceName}' does not exist.`,
-        ),
-      };
+      throw new Error(
+        `Service with name '${config.serviceName}' does not exist.`,
+      );
     }
     const url = targetService.url + config.uri;
     if (config.data && typeof config.data === 'object') {

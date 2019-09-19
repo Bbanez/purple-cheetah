@@ -41,8 +41,14 @@ export class HiveClient {
     setInterval(this.tryToConnectToServer, 10000);
   }
 
-  public static async send(eventName: HiveEventName, data: HiveEventData) {
+  public static async send(eventName: HiveEventName, payload: any) {
     if (HiveClient.connected === true) {
+      const data: HiveEventData = new HiveEventData(
+        crypto.randomBytes(6).toString('hex'),
+        Date.now(),
+        '',
+        payload,
+      );
       data.signature = HiveAuth.sign(data, HiveClient.user);
       HiveClient.socket.emit(eventName, data);
     }
@@ -53,7 +59,7 @@ export class HiveClient {
       HiveClient.logger.info(
         '.tryToConnectToServer',
         'Trying to connect to Hive Server on ' +
-        `'${HiveClient.hiveServerBaseUrl}${HiveClient.socketServerPath}' ...`,
+          `'${HiveClient.hiveServerBaseUrl}${HiveClient.socketServerPath}' ...`,
       );
       HiveClient.socket = await socketIO(HiveClient.hiveServerBaseUrl, {
         path: HiveClient.socketServerPath,
