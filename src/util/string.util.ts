@@ -62,11 +62,11 @@ export class StringUtility {
     if (!e) {
       return undefined;
     }
-    let n: string = e
+    const n: string = encodeURIComponent((e + '')
       .replace(new RegExp(' ', 'g'), '87gifut2i')
       .replace(new RegExp('-', 'g'), '87gifut2i')
       .replace(new RegExp('-', 'g'), '87gifut2i')
-      .toLowerCase();
+      .toLowerCase());
     if (new RegExp('^[a-z0-9]+$').test(n) === false) {
       return undefined;
     }
@@ -80,7 +80,7 @@ export class StringUtility {
     return true;
   }
 
-   /**
+  /**
    * Get Base64 URL Encoded string.
    * @param data String that will be encoded.
    */
