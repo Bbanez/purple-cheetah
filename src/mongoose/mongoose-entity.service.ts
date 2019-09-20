@@ -126,20 +126,9 @@ export abstract class EntityService<T> {
       return false;
     }
     try {
-      const getEntityResult: any | null = await this.findById(
-        e._id.toHexString(),
-      );
-      if (getEntityResult === null) {
-        this.logger.error('.update', 'Entity does not exist');
-        return false;
-      } else {
-        e.updatedAt = Date.now();
-        e.createdAt = getEntityResult.createdAt;
-        const combined: any = this.combineObjects(getEntityResult, e);
-        delete combined._id;
-        await this.repo.updateOne({ _id: e._id.toHexString() }, combined);
-        return true;
-      }
+      e.updatedAt = Date.now();
+      await this.repo.updateOne({ _id: e._id.toHexString() }, e);
+      return true;
     } catch (error) {
       this.logger.error('.update', {
         errorMessage: error.message,
