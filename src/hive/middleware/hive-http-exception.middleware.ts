@@ -24,14 +24,14 @@ export class HiveHttpExceptionHandler implements ExceptionHandler {
         };
       }
       if (request.headers.request_nonce) {
-        data.payload.nonce = request.headers.request_nonce;
+        data.payload.gateway = { nonce: request.headers.request_nonce };
       }
       if (error instanceof Error) {
         data.payload.response.stack = Buffer.from(error.stack).toString(
           'base64',
         );
       }
-      HiveClient.send(HiveEventName.HTTP_REQUEST_ERROR, data);
+      HiveClient.send(HiveEventName.HTTP_REQUEST_ERROR, data.payload);
     }
     next(error);
   };

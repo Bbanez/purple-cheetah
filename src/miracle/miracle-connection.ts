@@ -6,22 +6,22 @@ import { MiracleRequest } from './interfaces/miracle-request.interface';
 import { MiracleResponse } from './interfaces/miracle-response.interface';
 
 export class MiracleConnection {
-  private tokenUnpacked?: JWT;
-  private connected: boolean = false;
-  private services: Array<{
+  public tokenUnpacked?: JWT;
+  public connected: boolean = false;
+  public services: Array<{
     name: string;
     url: string;
   }>;
 
   constructor(
-    private readonly serviceName: string,
-    private readonly secret: string,
-    private readonly connectionUrl: string,
-    private readonly defaultHeaders?: Array<{
+    public readonly serviceName: string,
+    public readonly secret: string,
+    public readonly connectionUrl: string,
+    public readonly defaultHeaders?: Array<{
       key: string;
       value: string;
     }>,
-    private token?: string,
+    public token?: string,
   ) {
     if (this.token) {
       const tokenUnpacked = JWTEncoding.decode(this.token);
@@ -32,66 +32,66 @@ export class MiracleConnection {
     }
   }
 
-  public async request(config: MiracleRequest): Promise<MiracleResponse> {
-    if (!config.headers) {
-      config.headers = {};
-    }
-    if (this.defaultHeaders) {
-      // tslint:disable-next-line: forin
-      for (const i in this.defaultHeaders) {
-        config.headers[this.defaultHeaders[i].key] = this.defaultHeaders[
-          i
-        ].value;
-      }
-    }
-    const targetService = this.services.find(
-      e => e.name === config.serviceName,
-    );
-    if (!targetService) {
-      throw new Error(
-        `Service with name '${config.serviceName}' does not exist.`,
-      );
-    }
-    const url = targetService.url + config.uri;
-    if (config.data && typeof config.data === 'object') {
-      config.headers['Content-Type'] = 'application/json';
-    }
-    if (
-      !this.tokenUnpacked ||
-      this.tokenUnpacked.payload.iat + this.tokenUnpacked.payload.exp <
-        Date.now() ||
-      this.connected === false
-    ) {
-      await this.connect();
-    }
-    config.headers.Authorization = 'Bearer ' + this.token;
-    try {
-      const result = await Axios({
-        url,
-        method: config.method,
-        headers: config.headers,
-        data: config.data,
-      });
-      return {
-        success: true,
-        response: {
-          status: result.status,
-          data: result.data,
-          headers: result.headers,
-        },
-      };
-    } catch (error) {
-      return {
-        success: false,
-        response: {
-          status: error.response.status,
-          headers: error.response.headers,
-          data: error.response.data,
-        },
-        error,
-      };
-    }
-  }
+  // public request = async (config: MiracleRequest): Promise<MiracleResponse> => {
+  //   if (!config.headers) {
+  //     config.headers = {};
+  //   }
+  //   if (this.defaultHeaders) {
+  //     // tslint:disable-next-line: forin
+  //     for (const i in this.defaultHeaders) {
+  //       config.headers[this.defaultHeaders[i].key] = this.defaultHeaders[
+  //         i
+  //       ].value;
+  //     }
+  //   }
+  //   const targetService = this.services.find(
+  //     e => e.name === config.serviceName,
+  //   );
+  //   if (!targetService) {
+  //     throw new Error(
+  //       `Service with name '${config.serviceName}' does not exist.`,
+  //     );
+  //   }
+  //   const url = targetService.url + config.uri;
+  //   if (config.data && typeof config.data === 'object') {
+  //     config.headers['Content-Type'] = 'application/json';
+  //   }
+  //   if (
+  //     !this.tokenUnpacked ||
+  //     this.tokenUnpacked.payload.iat + this.tokenUnpacked.payload.exp <
+  //       Date.now() ||
+  //     this.connected === false
+  //   ) {
+  //     await this.connect();
+  //   }
+  //   config.headers.Authorization = 'Bearer ' + this.token;
+  //   try {
+  //     const result = await Axios({
+  //       url,
+  //       method: config.method,
+  //       headers: config.headers,
+  //       data: config.data,
+  //     });
+  //     return {
+  //       success: true,
+  //       response: {
+  //         status: result.status,
+  //         data: result.data,
+  //         headers: result.headers,
+  //       },
+  //     };
+  //   } catch (error) {
+  //     return {
+  //       success: false,
+  //       response: {
+  //         status: error.response.status,
+  //         headers: error.response.headers,
+  //         data: error.response.data,
+  //       },
+  //       error,
+  //     };
+  //   }
+  // }
 
   public async connect(): Promise<void> {
     const timestamp = Date.now();
