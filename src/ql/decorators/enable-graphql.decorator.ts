@@ -7,7 +7,7 @@ import { QLMiddleware } from '../middleware/ql.middleware';
 
 export function EnableGraphQL(config: {
   uri?: string;
-  rootName: string,
+  rootName: string;
   objects?: QLObject[];
   resolvers?: QLResolver[];
   graphiql: boolean;
@@ -17,15 +17,41 @@ export function EnableGraphQL(config: {
     if (config.objects) {
       stringObjects = config.objects
         .map(e => {
-          return `
-          type ${e.name} {
-            ${e.fields
-              .map(field => {
-                return `${field.name}: ${field.type}`;
-              })
-              .join('\n')}
+          if (e.description) {
+            return `
+              """
+              ${e.description}
+              """
+              type ${e.name} {
+                ${e.fields
+                  .map(field => {
+                    if (field.description) {
+                      return `
+                        "${field.description}"
+                        ${field.name}: ${field.type}
+                      `;
+                    } else {
+                      return `${field.name}: ${field.type}`;
+                    }
+                  })
+                  .join('\n')}
+              }
+            `;
+          } else {
+            return `
+              type ${e.name} {
+                ${e.fields
+                  .map(field => {
+                    if (field.description) {
+                      return `${field.description}\n${field.name}: ${field.type}`;
+                    } else {
+                      return `${field.name}: ${field.type}`;
+                    }
+                  })
+                  .join('\n')}
+              }
+            `;
           }
-        `;
         })
         .join('\n');
     }
@@ -102,7 +128,10 @@ export function EnableGraphQL(config: {
       }
     `;
     if (rootMutation !== '') {
-      schema = schema.replace('@mutation', `mutation: ${config.rootName}Mutation`);
+      schema = schema.replace(
+        '@mutation',
+        `mutation: ${config.rootName}Mutation`,
+      );
     } else {
       schema = schema.replace('@mutation', '');
     }
