@@ -65,15 +65,34 @@ export class Miracle {
         },
       };
     } catch (error) {
-      return {
-        success: false,
-        response: {
-          status: error.response.status,
-          headers: error.response.headers,
-          data: error.response.data,
-        },
-        error,
-      };
+      if (
+        error.response &&
+        error.response.status &&
+        error.response.headers &&
+        error.response.data
+      ) {
+        return {
+          success: false,
+          response: {
+            status: error.response.status,
+            headers: error.response.headers,
+            data: error.response.data,
+          },
+          error,
+        };
+      } else {
+        return {
+          success: false,
+          response: {
+            status: 500,
+            headers: {},
+            data: {
+              message: 'Unknown error.',
+            },
+          },
+          error,
+        };
+      }
     }
   }
 }

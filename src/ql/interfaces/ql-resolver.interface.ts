@@ -13,4 +13,5 @@ export interface QLResolver {
     returnType: string;
   };
   resolver: (args: any) => Promise<any>;
+  description?: string;
 }

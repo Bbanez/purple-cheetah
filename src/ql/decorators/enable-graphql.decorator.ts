@@ -4,11 +4,13 @@ import {
 } from '../interfaces/ql-resolver.interface';
 import { QLObject } from '../interfaces/ql-object.interface';
 import { QLMiddleware } from '../middleware/ql.middleware';
+import { QLInput } from '../interfaces/ql-input.interface';
 
 export function EnableGraphQL(config: {
   uri?: string;
   rootName: string;
   objects?: QLObject[];
+  inputs?: QLInput[];
   resolvers?: QLResolver[];
   graphiql: boolean;
 }) {
@@ -56,6 +58,49 @@ export function EnableGraphQL(config: {
         .join('\n');
     }
 
+    let stringInputs: string = '';
+    if (config.inputs) {
+      stringInputs = config.inputs
+        .map(e => {
+          if (e.description) {
+            return `
+              """
+              ${e.description}
+              """
+              input ${e.name} {
+                ${e.fields
+                  .map(field => {
+                    if (field.description) {
+                      return `
+                        "${field.description}"
+                        ${field.name}: ${field.type}
+                      `;
+                    } else {
+                      return `${field.name}: ${field.type}`;
+                    }
+                  })
+                  .join('\n')}
+              }
+            `;
+          } else {
+            return `
+              input ${e.name} {
+                ${e.fields
+                  .map(field => {
+                    if (field.description) {
+                      return `${field.description}\n${field.name}: ${field.type}`;
+                    } else {
+                      return `${field.name}: ${field.type}`;
+                    }
+                  })
+                  .join('\n')}
+              }
+            `;
+          }
+        })
+        .join('\n');
+    }
+
     let rootQueryString: string = '';
     let rootMutationString: string = '';
     const rootValue: any = {};
@@ -66,10 +111,20 @@ export function EnableGraphQL(config: {
         switch (e.type) {
           case QLResolverType.QUERY:
             {
-              rootQueryString =
-                rootQueryString +
-                `${e.name}@args: ${e.root.returnType}
+              if (e.description) {
+                rootQueryString =
+                  rootQueryString +
+                  `"""
+                  ${e.description}
+                  """
+                ${e.name}@args: ${e.root.returnType}
                 `;
+              } else {
+                rootQueryString =
+                  rootQueryString +
+                  `${e.name}@args: ${e.root.returnType}
+                `;
+              }
               let args: string = '';
               if (e.root.args) {
                 args =
@@ -86,8 +141,17 @@ export function EnableGraphQL(config: {
             break;
           case QLResolverType.MUTATION:
             {
-              rootMutationString =
-                rootMutationString + `${e.name}@args: ${e.root.returnType}\n`;
+              if (e.description) {
+                rootMutationString =
+                  rootMutationString +
+                  `"""
+                  ${e.description}
+                  """
+                ${e.name}@args: ${e.root.returnType}\n`;
+              } else {
+                rootMutationString =
+                  rootMutationString + `${e.name}@args: ${e.root.returnType}\n`;
+              }
               let args: string = '';
               if (e.root.args) {
                 args =
@@ -109,6 +173,9 @@ export function EnableGraphQL(config: {
     let rootMutation: string = '';
     if (rootQueryString !== '') {
       rootQuery = `
+        """
+        Root Query for GetCV
+        """
         type ${config.rootName}Query {
           ${rootQueryString}
         }
@@ -116,6 +183,9 @@ export function EnableGraphQL(config: {
     }
     if (rootMutationString !== '') {
       rootMutation = `
+        """
+        Root Mutation for GetCV
+        """
         type ${config.rootName}Mutation {
           ${rootMutationString}
         }
@@ -142,6 +212,8 @@ export function EnableGraphQL(config: {
     }
     const fullSchema = `
       ${stringObjects}
+
+      ${stringInputs}
 
       ${rootQuery}
 
