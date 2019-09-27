@@ -36,21 +36,13 @@ export function EnableMiracle(config: {
     };
     JWTConfigService.add(token);
     if (config.client) {
-      const miracleConnection = new MiracleConnection(
-        config.client.serviceName,
-        config.client.secret,
-        config.client.connectionUrl,
-        config.client.defaultHeaders,
-        config.client.token,
-      );
-      miracleConnection
-        .connect()
-        .then(result => {
-          Miracle.setConnection(miracleConnection);
-        })
-        .catch(e => {
-          throw e;
-        });
+      Miracle.setConnection({
+        serviceName: config.client.serviceName,
+        secret: config.client.secret,
+        connectionUrl: config.client.connectionUrl,
+        defaultHeaders: config.client.defaultHeaders,
+        token: config.client.token,
+      });
     }
     if (config.server) {
       config.server.services.forEach(e => {

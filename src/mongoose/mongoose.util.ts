@@ -61,6 +61,7 @@ export class Mongoose {
         try {
           await mongoose.connect(url, {
             useNewUrlParser: true,
+            useUnifiedTopology: true,
           });
           Mongoose.logger.info('.connect', 'Successful.');
         } catch (error) {

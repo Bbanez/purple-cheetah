@@ -120,11 +120,11 @@ export class MiracleConnection {
     });
     this.token = result.data.accessToken;
     this.services = result.data.services;
-    this.connected = true;
     const tokenUnpacked = JWTEncoding.decode(this.token);
     if (tokenUnpacked instanceof Error) {
       throw tokenUnpacked;
     }
+    this.connected = true;
     this.tokenUnpacked = tokenUnpacked;
   }
 }
