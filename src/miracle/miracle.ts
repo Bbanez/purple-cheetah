@@ -29,6 +29,7 @@ export class Miracle {
       config.token,
     );
     Miracle.miracleConnection.connect();
+    clearInterval(Miracle.tryToConnectTimer);
     Miracle.tryToConnectTimer = setInterval(Miracle.tryToConnect, 10000);
   }
 

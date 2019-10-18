@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import Axios from 'axios';
+import Axios, { AxiosResponse } from 'axios';
 
 import { JWT, JWTEncoding } from '../jwt';
 import { MiracleRequest } from './interfaces/miracle-request.interface';
@@ -111,13 +111,20 @@ export class MiracleConnection {
           signature,
         }),
       ).toString('base64');
-    const result = await Axios({
-      url: this.connectionUrl,
-      method: 'POST',
-      headers: {
-        Authorization: authHeader,
-      },
-    });
+    let result: AxiosResponse;
+    try {
+      result = await Axios({
+        url: this.connectionUrl,
+        method: 'POST',
+        headers: {
+          Authorization: authHeader,
+        },
+      });
+    } catch (error) {
+      // tslint:disable-next-line:no-console
+      console.log(error);
+      return;
+    }
     this.token = result.data.accessToken;
     this.services = result.data.services;
     const tokenUnpacked = JWTEncoding.decode(this.token);
