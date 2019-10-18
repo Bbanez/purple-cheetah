@@ -2,8 +2,8 @@ import * as crypto from 'crypto';
 import Axios, { AxiosResponse } from 'axios';
 
 import { JWT, JWTEncoding } from '../jwt';
-import { MiracleRequest } from './interfaces/miracle-request.interface';
-import { MiracleResponse } from './interfaces/miracle-response.interface';
+import { AppLogger } from '../decorators/app-logger.decorator';
+import { Logger } from '../logger';
 
 export class MiracleConnection {
   public tokenUnpacked?: JWT;
@@ -12,6 +12,8 @@ export class MiracleConnection {
     name: string;
     url: string;
   }>;
+  @AppLogger(MiracleConnection)
+  private logger: Logger;
 
   constructor(
     public readonly serviceName: string,
@@ -121,8 +123,8 @@ export class MiracleConnection {
         },
       });
     } catch (error) {
-      // tslint:disable-next-line:no-console
-      console.log(error);
+      this.logger.error('.connect', 'Failed to connect to Miracle Server.');
+      this.logger.error('.connect', error);
       return;
     }
     this.token = result.data.accessToken;
@@ -133,5 +135,6 @@ export class MiracleConnection {
     }
     this.connected = true;
     this.tokenUnpacked = tokenUnpacked;
+    this.logger.info('.connect', 'Connect to Miracle Server.');
   }
 }
