@@ -128,7 +128,7 @@ export class Miracle {
   }
 
   private static async tryToConnect() {
-    if (!Miracle.miracleConnection.connected === false) {
+    if (Miracle.miracleConnection.connected === false) {
       await Miracle.miracleConnection.connect();
     }
   }

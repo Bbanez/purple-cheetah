@@ -135,6 +135,6 @@ export class MiracleConnection {
     }
     this.connected = true;
     this.tokenUnpacked = tokenUnpacked;
-    this.logger.info('.connect', 'Connect to Miracle Server.');
+    this.logger.info('.connect', 'Connected to Miracle Server.');
   }
 }
