@@ -68,7 +68,7 @@ export class Mongoose {
           Mongoose.logger.error('.connect', error);
         }
       } else if (this.config.atlas) {
-        let url: string =
+        const url: string =
           'mongodb+srv://' +
           Mongoose.config.atlas.user.name +
           ':' +
@@ -83,6 +83,7 @@ export class Mongoose {
         try {
           await mongoose.connect(url, {
             useNewUrlParser: true,
+            useUnifiedTopology: true,
           });
           Mongoose.logger.info('.connect', 'Successful.');
         } catch (error) {

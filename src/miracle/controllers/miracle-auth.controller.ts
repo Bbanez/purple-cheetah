@@ -23,9 +23,7 @@ export class MiracleAuthController {
   @AppLogger(MiracleAuthController)
   private logger: Logger;
 
-  constructor(
-    services: MiracleService[],
-  ) {
+  constructor(services: MiracleService[]) {
     MiracleAuthController.services = JSON.parse(JSON.stringify(services));
   }
 
@@ -35,7 +33,7 @@ export class MiracleAuthController {
   ): Promise<{
     accessToken: string;
     services: Array<{
-      name: string,
+      name: string;
       url: string;
     }>;
   }> {
@@ -129,6 +127,10 @@ export class MiracleAuthController {
         },
       ],
       JWTConfigService.get('miracle-token-config'),
+    );
+    this.logger.info(
+      '.authorize',
+      `Service '${service.name}' connected to server.`,
     );
     return {
       accessToken: JWTEncoding.encode(jwt),
