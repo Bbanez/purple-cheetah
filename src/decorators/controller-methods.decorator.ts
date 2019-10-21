@@ -74,7 +74,9 @@ function build(
         }
       }
       const result = await original.apply(target, args);
-      if (typeof result === 'object') {
+      if (result instanceof Buffer) {
+        args[0].res.send(result);
+      } else if (typeof result === 'object') {
         args[0].res.json(result);
       } else {
         if (result) {
