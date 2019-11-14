@@ -348,6 +348,44 @@ export class ObjectUtility {
     }
   }
 
+  public static schemaToObject(schema: any, level?: string): any {
+    if (!level) {
+      level = 'root';
+    }
+    const object: any = ObjectUtility.typeToValue(schema.__type);
+    if (schema.__type === 'object') {
+      // tslint:disable-next-line:forin
+      for (const key in schema.__child) {
+        object[key] = ObjectUtility.schemaToObject(
+          schema.__child[key],
+          `level.${key}`,
+        );
+      }
+    }
+    return object;
+  }
+
+  private static typeToValue(type: string): any {
+    switch (type) {
+      case 'object': {
+        return {};
+      }
+      case 'array': {
+        return [];
+      }
+      case 'string': {
+        return '';
+      }
+      case 'number': {
+        return 0;
+      }
+      case 'boolean': {
+        return false;
+      }
+    }
+    return undefined;
+  }
+
   /**
    * Generate a schema object based on object that is parsed. Will
    * throw an error with a message if problem is detected. Use

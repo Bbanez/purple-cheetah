@@ -62,15 +62,28 @@ export class StringUtility {
     if (!e) {
       return undefined;
     }
-    const n: string = encodeURIComponent((e + '')
-      .replace(new RegExp(' ', 'g'), '87gifut2i')
-      .replace(new RegExp('-', 'g'), '87gifut2i')
-      .replace(new RegExp('-', 'g'), '87gifut2i')
-      .toLowerCase());
+    const n: string = encodeURIComponent(
+      (e + '')
+        .replace(new RegExp(' ', 'g'), '87gifut2i')
+        .replace(new RegExp('-', 'g'), '87gifut2i')
+        .replace(new RegExp('-', 'g'), '87gifut2i')
+        .toLowerCase(),
+    );
     if (new RegExp('^[a-z0-9]+$').test(n) === false) {
       return undefined;
     }
     return n.replace(new RegExp('87gifut2i', 'g'), '-');
+  }
+
+  public static createSlug(e: string) {
+    if (!e) {
+      throw new Error(`'e' is undefined`);
+    }
+    return e
+      .toLowerCase()
+      .replace(/ /g, '-')
+      .replace(/_/g, '-')
+      .replace(/[^a-z0-9 - ---]/g, '');
   }
 
   public static isPasswordValid(password: string): boolean {
