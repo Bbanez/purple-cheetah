@@ -276,17 +276,17 @@ export class ObjectUtility {
     schema: any,
     level?: string,
   ): void {
-    if (!level) {
+    if (typeof level === 'undefined') {
       level = 'root';
     }
-    if (!object) {
+    if (typeof object === 'undefined') {
       throw new Error(`${level}: 'object' cannot be 'undefined'`);
     }
-    if (!schema) {
+    if (typeof schema === 'undefined') {
       throw new Error(`${level}: 'schema' cannot be 'undefined'`);
     }
     for (const key in schema) {
-      if (!object[key]) {
+      if (typeof object[key] === 'undefined') {
         if (schema[key].__required === true) {
           throw new Error(`${level}: Object is missing property '${key}'.`);
         }
