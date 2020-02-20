@@ -12,9 +12,24 @@ import { HiveServerHttpExceptionHandler } from '../middleware/hive-server-http-e
 import { IHiveRequestLog } from '../interfaces/hive-request-log.interface';
 import { HiveRequestLogBufferService } from '../hive-request-log-buffer.service';
 
+/**
+ * Decorator what annotates an [Application]() as a
+ * [Hive Server](https://purple-cheetah.dev/tutorials/hive/server).
+ * [Find out more about Hive Protocol](https://purple-cheetah.dev/tutorials/hive).
+ */
 export function EnableHiveServer(config: {
+  /**
+   * Service what holds information about [Hive Clients](/classes/hiveclient.html).
+   */
   socketUserService: IHiveSocketUserService;
+  /**
+   * Function that will be called when request buffer is ready for writing.
+   */
   emptyRequestLogBufferHandler: (logs: IHiveRequestLog[]) => Promise<void>;
+  /**
+   * Array of handlers for incoming messages from
+   * [Hive Server](/globals.html#enablehiveserver)
+   */
   eventHandlers: IHiveEventHandler[];
 }) {
   return (target: any) => {
@@ -25,7 +40,9 @@ export function EnableHiveServer(config: {
       throw new Error('Server does now exist.');
     }
     if (target.prototype.exceptionHandlers) {
-      target.prototype.exceptionHandlers.push(new HiveServerHttpExceptionHandler());
+      target.prototype.exceptionHandlers.push(
+        new HiveServerHttpExceptionHandler(),
+      );
     } else {
       target.prototype.exceptionHandlers = [
         new HiveServerHttpExceptionHandler(),
@@ -55,9 +72,7 @@ export function EnableHiveServer(config: {
       } else {
         logger.info(
           '.connectionHandler',
-          `New socket [socketId=${connection.socket.id}, userId=${
-            connection.user._id
-          }] registered.`,
+          `New socket [socketId=${connection.socket.id}, userId=${connection.user._id}] registered.`,
         );
         const response = HiveEventDataFactory.instance;
         response.nonce = connection.user._id.toHexString();
@@ -71,9 +86,7 @@ export function EnableHiveServer(config: {
           HiveConnectionService.deleteBySocketId(connection.socket.id);
           logger.info(
             '.disconnect',
-            `Socket [socketId=${connection.socket.id}, userId=${
-              connection.user._id
-            }] disconnected.`,
+            `Socket [socketId=${connection.socket.id}, userId=${connection.user._id}] disconnected.`,
           );
         });
 

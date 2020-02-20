@@ -9,7 +9,7 @@
     "dev": "nodemon src/main.ts",
     "node-dev": "node src/main.ts",
     "build": "tsc -p .",
-    "typedoc": "typedoc --theme minimal server",
+    "typedoc-generate": "typedoc",
     "test": "mocha ./test --recursive --exit"
   },
   "repository": {

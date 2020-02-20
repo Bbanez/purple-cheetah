@@ -4,6 +4,9 @@ import { HiveClient } from '../hive.client';
 import { HiveEventName } from '../models/hive-event-name.enum';
 import { ExceptionHandler } from '../../interfaces/exception-handler.interface';
 
+/**
+ * Exception Handler for requests for Hive Client.
+ */
 export class HiveHttpExceptionHandler implements ExceptionHandler {
   name: string = 'HiveHttpExceptionHandler';
   handler: ErrorRequestHandler = (

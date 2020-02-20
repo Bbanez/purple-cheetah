@@ -3,11 +3,48 @@ import * as http from 'http';
 import { Middleware } from '../interfaces/middleware.interface';
 import { Logger } from '../logger';
 import { ExceptionHandler } from '../interfaces/exception-handler.interface';
+import { IController } from 'src/interfaces/controller.interface';
 
+/**
+ * Main entry point for Purple Cheetah application. This decorator
+ * will initialize application and expose `.listen` method
+ * with which http server can be started.
+ *
+ * ### Example
+ *
+ * ```ts
+ *  // app.ts
+ *  @Application({
+ *    port: 1280,
+ *    controllers: [],
+ *    middleware: [],
+ *    exceptionHandlers: []
+ *  })
+ *  export class App {};
+ * ```
+ *
+ * ```ts
+ *  // main.ts
+ *  const app = new App();
+ *  app.listen()
+ * ```
+ */
 export function Application(config: {
+  /** Port on which application will be started. */
   port: number;
-  controllers: any[];
+  /**
+   * Array of Controller Objects:
+   * see [Controller](/globals.html#controller) from more info.
+   */
+  controllers: IController[];
+  /** Array of Middleware Objects:
+   * see [Middleware](/interfaces/middleware.html) from more info.
+   */
   middleware: Middleware[];
+  /**
+   * Array of Exception Handler Objects:
+   * see [ExceptionHandler](/interfaces/exceptionhandler.html) from more info.
+   */
   exceptionHandlers: ExceptionHandler[];
 }) {
   return (target: any) => {

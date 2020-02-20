@@ -2,6 +2,8 @@
 /dist
 /lib
 /node_modules
+serve.sh
+push-typedoc.sh
 
 # Logs
 logs

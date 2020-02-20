@@ -2,6 +2,8 @@
 
 ![Logo](https://i.imgur.com/f2Mv4QD.png)
 
+[![npm](https://nodei.co/npm/purple-cheetah.png)](https://www.npmjs.com/package/purple-cheetah)
+
 Purple Cheetah is a micro-framework for Node/Express web applications, mush better would be to say that this is set of utilities and features for Express that will help you make complex web APIs. **Purple Cheetah is not a general purpose framework**, it main purpose is to be used in microservice but it is not limited to.
 
 ## Get Started

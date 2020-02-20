@@ -1,3 +1,4 @@
+/** @ignore */
 export interface IHiveEventData {
   nonce: string;
   timestamp: number;
@@ -5,6 +6,11 @@ export interface IHiveEventData {
   payload: any;
 }
 
+/**
+ * Event Data Object. Used for transferring messages
+ * between [Client](/globals.html#enablehiveclient) and
+ * [Server](/globals.html#enablehiveserver).
+ */
 export class HiveEventData {
   constructor(
     public nonce: string,

@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import { Logger } from '../logger';
 import { AppLogger } from '../decorators/app-logger.decorator';
 
+/** MongooseConfig */
 export interface MongooseConfig {
   selfHosted?: {
     user: {

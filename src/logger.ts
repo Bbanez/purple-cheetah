@@ -1,9 +1,8 @@
-/**
- * @author https://www.branislav.xyz
- */
-
 import * as fs from 'fs';
 
+/**
+ * Used as a utility for Logger.
+ */
 export enum ConsoleColors {
   Reset = '\x1b[0m',
   Bright = '\x1b[1m',
@@ -32,12 +31,22 @@ export enum ConsoleColors {
   BgWhite = '\x1b[47m',
 }
 
+/**
+ * Handles logging to console and log file.
+ */
 export class Logger {
   public component: string;
   public static filePath?: string;
   constructor(component: string) {
     this.component = component;
   }
+
+  /**
+   * Prints an information message.
+   *
+   * @param place Place in code from where the function is called
+   * @param message Text or data that will be printed and logged
+   */
   public info(place: string, message: any): void {
     let print: string = '';
     if (typeof message === 'object') {
@@ -48,21 +57,24 @@ export class Logger {
       print = message;
     }
     const output: string[] = [
-      `${ConsoleColors.BgWhite}${ConsoleColors.FgBlack}[INFO]${
-        ConsoleColors.Reset
-      }`,
+      `${ConsoleColors.BgWhite}${ConsoleColors.FgBlack}[INFO]${ConsoleColors.Reset}`,
       `[${ConsoleColors.FgCyan}${new Date().toLocaleString()}${
         ConsoleColors.Reset
       }]`,
-      `${ConsoleColors.Bright}${ConsoleColors.FgMagenta}${this.component}${
-        ConsoleColors.Reset
-      }`,
+      `${ConsoleColors.Bright}${ConsoleColors.FgMagenta}${this.component}${ConsoleColors.Reset}`,
       `${ConsoleColors.FgMagenta}${place}${ConsoleColors.Reset}`,
       '>',
       print,
     ];
     this.output(output);
   }
+
+  /**
+   * Prints an warning message.
+   *
+   * @param place Place in code from where the function is called
+   * @param message Text or data that will be printed and logged
+   */
   public warn(place: string, message: any): void {
     let print: string = '';
     if (typeof message === 'object') {
@@ -75,21 +87,24 @@ export class Logger {
       print = message;
     }
     const output: string[] = [
-      `${ConsoleColors.BgYellow}${ConsoleColors.FgBlack}[WARN]${
-        ConsoleColors.Reset
-      }`,
+      `${ConsoleColors.BgYellow}${ConsoleColors.FgBlack}[WARN]${ConsoleColors.Reset}`,
       `[${ConsoleColors.FgCyan}${new Date().toLocaleString()}${
         ConsoleColors.Reset
       }]`,
-      `${ConsoleColors.Bright}${ConsoleColors.FgMagenta}${this.component}${
-        ConsoleColors.Reset
-      }`,
+      `${ConsoleColors.Bright}${ConsoleColors.FgMagenta}${this.component}${ConsoleColors.Reset}`,
       `${ConsoleColors.FgMagenta}${place}${ConsoleColors.Reset}`,
       '>',
       print,
     ];
     this.output(output);
   }
+
+  /**
+   * Prints an error message.
+   *
+   * @param place Place in code from where the function is called
+   * @param message Text or data that will be printed and logged
+   */
   public error(place: string, message: any): void {
     let print: string = '';
     if (typeof message === 'object') {
@@ -109,15 +124,11 @@ export class Logger {
       print = message;
     }
     const output: string[] = [
-      `${ConsoleColors.BgRed}${ConsoleColors.FgBlack}[ERROR]${
-        ConsoleColors.Reset
-      }`,
+      `${ConsoleColors.BgRed}${ConsoleColors.FgBlack}[ERROR]${ConsoleColors.Reset}`,
       `[${ConsoleColors.FgCyan}${new Date().toLocaleString()}${
         ConsoleColors.Reset
       }]`,
-      `${ConsoleColors.Bright}${ConsoleColors.FgMagenta}${this.component}${
-        ConsoleColors.Reset
-      }`,
+      `${ConsoleColors.Bright}${ConsoleColors.FgMagenta}${this.component}${ConsoleColors.Reset}`,
       `${ConsoleColors.FgMagenta}${place}${ConsoleColors.Reset}`,
       '>',
       print,
@@ -125,6 +136,9 @@ export class Logger {
     this.output(output);
   }
 
+  /**
+   * Outputs a message to a log file.
+   */
   private output(s: string[]) {
     // tslint:disable-next-line: no-console
     console.log(s.join(' '));

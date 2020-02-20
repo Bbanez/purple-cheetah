@@ -6,6 +6,10 @@ interface RouteMethodOptions {
   };
 }
 
+/**
+ * Decorator that will annotate a function as a GET method for
+ * a [Controller](/globals.html#controller).
+ */
 export function Get(uri?: string, options?: RouteMethodOptions) {
   return (
     target: any,
@@ -16,6 +20,10 @@ export function Get(uri?: string, options?: RouteMethodOptions) {
   };
 }
 
+/**
+ * Decorator that will annotate a function as a POST method for
+ * a [Controller](/globals.html#controller).
+ */
 export function Post(uri?: string, options?: RouteMethodOptions) {
   return (
     target: any,
@@ -26,6 +34,10 @@ export function Post(uri?: string, options?: RouteMethodOptions) {
   };
 }
 
+/**
+ * Decorator that will annotate a function as a PUT method for
+ * a [Controller](/globals.html#controller).
+ */
 export function Put(uri?: string, options?: RouteMethodOptions) {
   return (
     target: any,
@@ -36,6 +48,10 @@ export function Put(uri?: string, options?: RouteMethodOptions) {
   };
 }
 
+/**
+ * Decorator that will annotate a function as a DELETE method for
+ * a [Controller](/globals.html#controller).
+ */
 export function Delete(uri?: string, options?: RouteMethodOptions) {
   return (
     target: any,
@@ -46,6 +62,10 @@ export function Delete(uri?: string, options?: RouteMethodOptions) {
   };
 }
 
+/**
+ * Function that will inject method information into
+ * a [Controller](/globals.html#controller).
+ */
 function build(
   method: string,
   target: any,

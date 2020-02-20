@@ -7,6 +7,9 @@ import { ExceptionHandler } from '../../interfaces/exception-handler.interface';
 import { HiveRequestLogBufferService } from '../hive-request-log-buffer.service';
 import { IHiveRequestLog } from '../interfaces/hive-request-log.interface';
 
+/**
+ * Exception Handler for requests for Hive Server.
+ */
 export class HiveServerHttpExceptionHandler implements ExceptionHandler {
   name: string = 'HiveServerHttpExceptionHandler';
   handler: ErrorRequestHandler = (

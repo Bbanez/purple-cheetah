@@ -1,6 +1,7 @@
 import { Socket } from 'socket.io';
 import { IHiveSocketUser } from '../interfaces/hive-socket-user.interface';
 
+/** @ignore */
 export interface IHiveConnection {
   socket: Socket;
   user: IHiveSocketUser;

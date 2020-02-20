@@ -1,6 +1,11 @@
 import { EurekaClient, Eureka } from 'eureka-js-client';
 import { Logger } from '../logger';
 
+/**
+ * Decorator that will create a [Eureka](https://github.com/Netflix/eureka)
+ * Client for an [Application](/globals.html#application).
+ * [More information on how to use this decorator](https://purple-cheetah.dev/tutorial/eureka)
+ */
 export function EnableEurekaClient(config: {
   eureka: {
     client: {
@@ -19,7 +24,7 @@ export function EnableEurekaClient(config: {
     };
   };
 }) {
-  return (target) => {
+  return target => {
     const logger = new Logger('EnableEurekaClient');
     const eurekaPortWrapper: EurekaClient.LegacyPortWrapper = {
       // tslint:disable-next-line: object-literal-key-quotes
@@ -31,9 +36,7 @@ export function EnableEurekaClient(config: {
         app: config.eureka.client.appId,
         hostName: config.eureka.client.ip,
         ipAddr: config.eureka.client.ip,
-        statusPageUrl: `http://${config.eureka.client.ip}:${
-          config.eureka.client.port
-        }`,
+        statusPageUrl: `http://${config.eureka.client.ip}:${config.eureka.client.port}`,
         port: eurekaPortWrapper,
         vipAddress: config.eureka.client.vipId,
         dataCenterInfo: {
@@ -52,7 +55,7 @@ export function EnableEurekaClient(config: {
     target.prototype.eureka = new Eureka(eurekaConfig);
     target.prototype.eureka.start(error => {
       if (error) {
-        logger.error('.init', 'Failed to connect to eureka server.')
+        logger.error('.init', 'Failed to connect to eureka server.');
         return;
       }
       logger.info('.init', 'Connected to eureka server.');

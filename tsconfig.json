@@ -12,5 +12,11 @@
     "baseUrl": "./",
     "incremental": true
   },
+  "typedocOptions": {
+    "name": "Purple Cheetah",
+    "theme": "minimal",
+    "mode": "file",
+    "out": "typedoc"
+  },
   "exclude": ["node_modules", "dist", "lib"]
 }

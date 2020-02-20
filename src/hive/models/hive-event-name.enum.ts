@@ -1,3 +1,7 @@
+/**
+ * Available event types that Hive [Client](/globals.html#enablehiveclient)
+ * and [Server](/globals.html#enablehiveserver) can understand.
+ */
 export enum HiveEventName {
   CLIENT_ERROR = 'CLIENT_ERROR',
   SERVER_ERROR = 'SERVER_ERROR',
