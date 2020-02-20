@@ -37,7 +37,7 @@ export class ObjectUtility {
       p = c;
     } else {
       for (const key in c) {
-        if (c[key] && c[key] !== null) {
+        if (typeof c[key] !== 'undefined' && c[key] !== null) {
           if (typeof c[key] === 'object') {
             if (c[key] instanceof Array) {
               p[key] = c[key];
@@ -83,185 +83,6 @@ export class ObjectUtility {
   }
 
   /**
-   * Method for checking if JSON object is following strict
-   * schema. For example, if we want to validate an object:
-   * ```
-   * {
-   *  name: "testName",
-   *  rank: {
-   *    name: "rankName",
-   *    value: 5
-   *  }
-   * }
-   * ```
-   * we will parse a schema:
-   * ```
-   * {
-   *  name: {
-   *    required: true,
-   *    type: "string"
-   *  },
-   *  rank: {
-   *    required: false,
-   *    type: "object",
-   *    instance: Object,
-   *    child: {
-   *      name: {
-   *        required: true,
-   *        type: "string"
-   *      },
-   *      value: {
-   *        required: true,
-   *        type: "number"
-   *      }
-   *    }
-   *  }
-   * }
-   * ```
-   * With this as a Schema, Object parsed for validation MUST HAVE
-   * property with name `name` and CAN HAVE property with name `rank`
-   * where property `name` MUST BE of type `string`. For test, new
-   * Objects will fail.
-   * Test 1:
-   * ```
-   * {
-   *  name: 5
-   * }
-   * ```
-   * Test 2:
-   * ```
-   * {
-   *  name: "testName",
-   *  rank: 5
-   * }
-   * ```
-   * Test 3:
-   * ```
-   * {
-   *  name: "testName",
-   *  rank: {
-   *    name: "someRankName"
-   *  }
-   * }
-   * ```
-   * @param object Object that will be validated.
-   * @param schema Schema which object must follow.
-   */
-  public static validate(object: any, schema: any): string {
-    for (const key in schema) {
-      if (!object[key]) {
-        if (schema[key].required !== false) {
-          return `Object missing key '${key}'.`;
-        }
-      } else {
-        if (typeof object[key] !== schema[key].type) {
-          return `Mismatch of type '${key}'. Expected a '${
-            schema[key].type
-          }' and got a '${typeof object[key]}'.`;
-        } else if (typeof object[key] === 'object') {
-          if (object[key] instanceof Array) {
-            if (schema[key].instance === 'primitive') {
-              for (let i in object[key]) {
-                if (typeof object[key][i] !== schema[key].child.type) {
-                  return `Mismatch of type array in '${key}'. Expected a '${
-                    schema[key].child.type
-                  }' and got a '${typeof object[key][i]}'.`;
-                }
-              }
-            } else {
-              for (const i in object[key]) {
-                if (!(object[key][i] instanceof schema[key].instance)) {
-                  return `Mismatch of instance in array '${key}'. Expected a '${schema[key].instance}'.`;
-                } else {
-                  const childValidationResult = ObjectUtility.validate(
-                    object[key][i],
-                    schema[key].child,
-                  );
-                  if (childValidationResult !== 'good') {
-                    return childValidationResult;
-                  }
-                }
-              }
-            }
-          } else {
-            if (!(object[key] instanceof schema[key].instance)) {
-              return `Mismatch of instance '${key}'. Expected a '${schema[key].instance}'.`;
-            } else {
-              const childValidationResult = ObjectUtility.validate(
-                object[key],
-                schema[key].child,
-              );
-              if (childValidationResult !== 'good') {
-                return childValidationResult;
-              }
-            }
-          }
-        }
-      }
-    }
-    return 'good';
-  }
-
-  /**
-   * Compare property types of DTO object to a DTO Dummy object.
-   * Returns a string with value `good` if all properties of the
-   * `dto` are the same as properties of the `dummy`, other vise
-   * returns a string that contains a description of a problem.
-   *
-   * @param dto Object that will be validated.
-   * @param dummy Dummy object to which DTO will be compared.
-   * @param level Level on which recursion is occurring.
-   */
-  public static validateDto(dto: object, dummy: object, level?: string): void {
-    if (!level) {
-      level = 'root';
-    }
-    // tslint:disable-next-line: forin
-    for (const key in dummy) {
-      if (!dto[key]) {
-        throw new Error(`${level}: Object is missing a key '${key}'.`);
-      }
-      if (typeof dummy[key] === typeof dto[key]) {
-        if (typeof dummy[key] === 'object') {
-          if (dummy[key] instanceof Array) {
-            if (dto[key].length > 0) {
-              if (typeof dummy[key][0] === 'object') {
-                // tslint:disable-next-line: forin
-                for (const i in dto[key]) {
-                  ObjectUtility.validateDto(
-                    dto[key][i],
-                    dummy[key][0],
-                    level + `.${key}`,
-                  );
-                }
-              } else {
-                const checkResult = dto[key].find(
-                  e => typeof e !== typeof dummy[key][0],
-                );
-                if (checkResult) {
-                  throw new Error(
-                    `${level}: Invalid type found in an Array property '${key}'. Expected a '${typeof dummy[
-                      key
-                    ][0]}' and got a '${typeof checkResult}'.`,
-                  );
-                }
-              }
-            }
-          } else {
-            ObjectUtility.validateDto(dto[key], dummy[key], level + `.${key}`);
-          }
-        }
-      } else {
-        throw new Error(
-          `${level}: Mismatch type of property '${key}'. Expected a '${typeof dummy[
-            key
-          ]}' and got a '${typeof dto[key]}'.`,
-        );
-      }
-    }
-  }
-
-  /**
    * Compare object with a schema. If object does not
    * follow the rules specified by schema, error will be
    * thrown with message that describes an error. Use this
@@ -269,7 +90,8 @@ export class ObjectUtility {
    *
    * @param object Object that will be checked.
    * @param schema Schema that object must follow.
-   * @param level Property that is being checked.
+   * @param level Since function is recursive, level indicates
+   *    what property is being converted. Used for throwing errors.
    */
   public static compareWithSchema(
     object: any,
@@ -348,6 +170,13 @@ export class ObjectUtility {
     }
   }
 
+  /**
+   * Converts object schema to JavaScript object.
+   *
+   * @param schema Schema of an Object
+   * @param level Since function is recursive, level indicates
+   *    what property is being converted. Used for throwing errors.
+   */
   public static schemaToObject(schema: any, level?: string): any {
     if (!level) {
       level = 'root';
@@ -365,6 +194,9 @@ export class ObjectUtility {
     return object;
   }
 
+  /**
+   * Converts property type to its value.
+   */
   private static typeToValue(type: string): any {
     switch (type) {
       case 'object': {

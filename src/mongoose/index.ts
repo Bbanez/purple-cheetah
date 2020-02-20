@@ -1,4 +1,3 @@
-export * from './mongoose-entity.service';
 export * from './mongoose-repository-buffer';
 export * from './mongoose.util';
 
