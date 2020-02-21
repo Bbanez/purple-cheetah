@@ -3,6 +3,9 @@ import { HttpError } from '../http-error.model';
 import { HttpStatus } from '../http-status.model';
 import { HttpException } from '../http-exception.model';
 
+/**
+ * Factory for creating new instance of Http Exception.
+ */
 export class HttpErrorFactory {
   public static simple(place: string, logger: Logger): HttpError {
     return {

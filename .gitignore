@@ -4,6 +4,8 @@
 /node_modules
 serve.sh
 push-typedoc.sh
+bundle.sh
+publish.sh
 
 # Logs
 logs
