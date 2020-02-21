@@ -3,22 +3,35 @@ import { MiracleConnection } from './miracle-connection';
 import { MiracleRequest } from './interfaces/miracle-request.interface';
 import { MiracleResponse } from './interfaces/miracle-response.interface';
 
+/**
+ * Helper class for managing Miracle connection.
+ */
 export class Miracle {
   private static miracleConnection?: MiracleConnection;
   private static tryToConnectTimer?: any;
 
+  /** Get current connection. */
   public static get connection() {
     return Miracle.miracleConnection;
   }
 
+  /** Open a connection to a Miracle Server. */
   public static setConnection(config: {
+    /**
+     * Name of the service that is trying
+     * to connect to a Miracle Server
+     */
     serviceName: string;
+    /** Secret key for specified service. */
     secret: string;
+    /** Url to Miracle Server. */
     connectionUrl: string;
+    /** Headers that will be included in every request. */
     defaultHeaders?: Array<{
       key: string;
       value: string;
     }>;
+    /** Is service already have valid JWT, it can be provided here. */
     token?: string;
   }) {
     Miracle.miracleConnection = new MiracleConnection(
@@ -33,6 +46,7 @@ export class Miracle {
     Miracle.tryToConnectTimer = setInterval(Miracle.tryToConnect, 10000);
   }
 
+  /** Send a request to other Miracle service. */
   public static async request(
     config: MiracleRequest,
   ): Promise<MiracleResponse> {

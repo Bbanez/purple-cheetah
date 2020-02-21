@@ -1,3 +1,7 @@
+/**
+ * Special type of exception that is understood
+ * by [ExceptionHandlerMiddleware](/classes/exceptionhandlermiddleware.html)
+ */
 export class HttpException {
   public message: any;
   public stack: any;

@@ -5,6 +5,9 @@ import { JWT, JWTEncoding } from '../jwt';
 import { AppLogger } from '../decorators/app-logger.decorator';
 import { Logger } from '../logger';
 
+/**
+ * Object that represents a connection to a Miracle Server.
+ */
 export class MiracleConnection {
   public tokenUnpacked?: JWT;
   public connected: boolean = false;
@@ -34,6 +37,9 @@ export class MiracleConnection {
     }
   }
 
+  /**
+   * Connect to Miracle Server and obtain JWT.
+   */
   public async connect(): Promise<void> {
     const timestamp = Date.now();
     const nonce = crypto.randomBytes(6).toString('base64');

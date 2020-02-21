@@ -4,6 +4,10 @@ import { Middleware } from '../interfaces/middleware.interface';
 import { Logger } from '../logger';
 import { AppLogger } from '../decorators/app-logger.decorator';
 
+/**
+ * Middleware for handling exception of type HttpException.
+ * Enabled by default in every Purple Cheetah application.
+ */
 export class ExceptionHandlerMiddleware implements Middleware {
   @AppLogger(ExceptionHandlerMiddleware)
   private static logger: Logger;

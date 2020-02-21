@@ -5,24 +5,48 @@ import { MiracleServiceBuffer } from '../miracle-service-buffer';
 import { MiracleAuthController } from '../controllers/miracle-auth.controller';
 import { JWTConfig, JWTConfigService, JWTEncryptionAlg } from '../../jwt';
 
+/**
+ * Decorator that creates a Miracle Server and/or Client
+ * depending on a configuration.
+ */
 export function EnableMiracle(config: {
+  /**
+   * JWT configuration that will be used
+   * for creating and validating tokens.
+   */
   jwtTokenConfig: {
-    alg: JWTEncryptionAlg,
-    issuer: string,
-    secret: string,
-    expIn: number,
-  };
-  client?: {
-    serviceName: string;
+    alg: JWTEncryptionAlg;
+    issuer: string;
     secret: string;
+    expIn: number;
+  };
+  /** Create a Miracle Client. */
+  client?: {
+    /**
+     * Name of service that will try
+     * to connect to Miracle Server.
+     */
+    serviceName: string;
+    /** Server for a service. */
+    secret: string;
+    /** URL of Miracle Server. */
     connectionUrl: string;
+    /**
+     * Headers that will be included
+     * in every request.
+     */
     defaultHeaders?: Array<{
       key: string;
       value: string;
     }>;
     token?: string;
   };
+  /** Create a Miracle Server. */
   server?: {
+    /**
+     * List of services that are allowed
+     * to connect to a given Miracle Server.
+     */
     services: MiracleService[];
   };
 }) {

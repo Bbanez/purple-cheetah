@@ -1,6 +1,9 @@
 import { HiveConnection } from './models/hive-connection.model';
 import { HiveEventName } from './models/hive-event-name.enum';
 
+/**
+ * Service used for managing Hive Connections.
+ */
 export class HiveConnectionService {
   private static connections: HiveConnection[] = [];
 

@@ -1,9 +1,14 @@
 import { JWTConfig } from './interfaces/jwt-config.interface';
 import { ObjectUtility } from '../util/object.util';
 
+/**
+ * Service used for storing and getting JWT
+ * configurations in-memory.
+ */
 export class JWTConfigService {
   private static configs: JWTConfig[] = [];
 
+  /** Add new configuration. */
   public static add(config: JWTConfig) {
     ObjectUtility.compareWithSchema(
       config,
@@ -34,12 +39,14 @@ export class JWTConfigService {
     JWTConfigService.configs.push(config);
   }
 
+  /** Add many new configurations. */
   public static addMany(configs: JWTConfig[]) {
     configs.forEach(config => {
       JWTConfigService.add(config);
     });
   }
 
+  /** Get configuration. */
   public static get(id: string): JWTConfig | undefined {
     return JWTConfigService.configs.find(e => e.id === id);
   }

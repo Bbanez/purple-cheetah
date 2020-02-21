@@ -5,6 +5,9 @@ import { HiveEventData } from './models/hive-event-data.model';
 import { HiveAuth } from './hive-auth.util';
 import { Logger } from '../logger';
 
+/**
+ * Helper class used for Hive Client.
+ */
 export class HiveClient {
   private static hiveServerBaseUrl: string;
   private static socketServerPath: string;
@@ -20,13 +23,20 @@ export class HiveClient {
   };
   private static connected: boolean = false;
 
+  /**
+   * Establish connection with Hive Server.
+   */
   public static connect(config: {
+    /** For example: `http://1.1.1.1:8000` */
     hiveServerBaseUrl: string;
+    /** For example: `/path/to/hive/server` */
     socketServerPath: string;
+    /** Hive Client user. */
     user: {
       key: string;
       secret: string;
     };
+    /** Array of event handler functions. */
     incomingEventHandlers: Array<{
       eventName: HiveEventName;
       callback: (error?: Error, data?: HiveEventData) => Promise<void>;
@@ -41,6 +51,9 @@ export class HiveClient {
     setInterval(this.tryToConnectToServer, 10000);
   }
 
+  /**
+   * Send an event to Hive Server.
+   */
   public static async send(eventName: HiveEventName, payload: any) {
     if (HiveClient.connected === true) {
       const data: HiveEventData = new HiveEventData(

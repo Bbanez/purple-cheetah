@@ -1,6 +1,11 @@
 import { IHiveRequestLog } from './interfaces/hive-request-log.interface';
 import { ObjectUtility } from '../util/object.util';
 
+/**
+ * Helper class used for buffering log messages. All incoming
+ * messages to Hive Server will be stored in a memory and every
+ * 60s seconds `emptyRequestLogBufferHandler` will be called.
+ */
 export class HiveRequestLogBufferService {
   private static logs: IHiveRequestLog[] = [];
   private static emptyRequestLogBufferHandler: (
@@ -8,6 +13,9 @@ export class HiveRequestLogBufferService {
   ) => Promise<void>;
   private static timer;
 
+  /**
+   * Initialize timer and buffer.
+   */
   public static init(
     emptyRequestLogBufferHandler: (logs: IHiveRequestLog[]) => Promise<void>,
   ) {
@@ -18,6 +26,9 @@ export class HiveRequestLogBufferService {
     );
   }
 
+  /**
+   * Add new log entry to the buffer.
+   */
   public static add(log: IHiveRequestLog) {
     for (const i in HiveRequestLogBufferService.logs) {
       if (HiveRequestLogBufferService.logs[i].gateway.nonce === log.gateway.nonce) {

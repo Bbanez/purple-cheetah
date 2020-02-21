@@ -3,6 +3,9 @@ import { JWTHeader } from './interfaces/jwt-header.interface';
 import { JWTPayload } from './interfaces/jwt-payload.interface';
 import { ObjectUtility } from '../util/object.util';
 
+/**
+ * Helper class used for encoding and decoding JWTs.
+ */
 export class JWTEncoding {
   public static encode(jwt: JWT): string {
     const header = this.base64url(JSON.stringify(jwt.header));
@@ -11,8 +14,8 @@ export class JWTEncoding {
   }
 
   public static decode(jwtAsString: string): JWT | Error {
-    if(!jwtAsString)  {
-      return new Error('Token is `undefined`.'); 
+    if (!jwtAsString) {
+      return new Error('Token is `undefined`.');
     }
     if (jwtAsString.startsWith('Bearer ') === true) {
       jwtAsString = jwtAsString.replace('Bearer ', '');

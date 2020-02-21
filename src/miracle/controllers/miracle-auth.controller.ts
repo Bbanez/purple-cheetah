@@ -17,6 +17,7 @@ import {
 } from '../../jwt';
 import { MiracleService } from '../interfaces/miracle-service.interface';
 
+/** @ignore */
 @Controller('/miracle/auth')
 export class MiracleAuthController {
   private static services: MiracleService[] = [];

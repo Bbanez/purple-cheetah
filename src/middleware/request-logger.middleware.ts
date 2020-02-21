@@ -2,6 +2,9 @@ import { Middleware } from '../interfaces/middleware.interface';
 import { RequestHandler, Request, Response, NextFunction } from 'express';
 import { Logger } from '../logger';
 
+/**
+ * Middleware for logging and printing incoming request.
+ */
 export class RequestLoggerMiddleware implements Middleware {
   private logger = new Logger('RequestLoggerMiddleware');
   uri: string = '';

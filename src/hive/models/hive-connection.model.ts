@@ -8,6 +8,10 @@ export interface IHiveConnection {
   connected: boolean;
 }
 
+/**
+ * Object that holds information about a Hive Client
+ * that is connected to a Hive Server.
+ */
 export class HiveConnection implements IHiveConnection {
   constructor(
     public socket: Socket,

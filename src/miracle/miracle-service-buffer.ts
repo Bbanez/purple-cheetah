@@ -1,5 +1,8 @@
 import { MiracleService } from './interfaces/miracle-service.interface';
 
+/**
+ * Service that stores Miracle Services in-memory.
+ */
 export class MiracleServiceBuffer {
   private static services: MiracleService[] = [];
 

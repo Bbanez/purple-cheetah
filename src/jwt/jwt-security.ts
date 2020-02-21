@@ -11,7 +11,18 @@ import {
   PermissionName,
 } from './interfaces/jwt-permission.interface';
 
+/**
+ * Helper class used for creating and validating JWTs.
+ */
 export class JWTSecurity {
+  /**
+   * Will create a new JWT with selected options.
+   *
+   * @param userId ID of a used for whom token is created
+   * @param roles Allowed user roles
+   * @param config Configuration for a token
+   * @param customPool Custom user properties.
+   */
   public static createToken(
     userId: string,
     roles: Role[],
@@ -41,6 +52,9 @@ export class JWTSecurity {
     return jwt;
   }
 
+  /**
+   * Create a signature for a given JWT.
+   */
   public static signToken(jwt: JWT, secret: string): string {
     const header = JWTEncoding.base64url(JSON.stringify(jwt.header));
     const payload = JWTEncoding.base64url(JSON.stringify(jwt.payload));
@@ -63,6 +77,10 @@ export class JWTSecurity {
     return JWTEncoding.trimBase64url(hmac.read().toString());
   }
 
+  /**
+   * Check if a given JWT is valid according to a
+   * provided JWT configuration.
+   */
   public static validateToken(jwt: JWT, config: JWTConfig): void | Error {
     if (config.issuer !== jwt.payload.iss) {
       return new Error('Bad token issuer.');
@@ -83,6 +101,10 @@ export class JWTSecurity {
     }
   }
 
+  /**
+   * For a given a roles and permission, check
+   * if JWT is valid.
+   */
   public static checkTokenPermissions(
     jwt: JWT,
     roleNames: RoleName[],

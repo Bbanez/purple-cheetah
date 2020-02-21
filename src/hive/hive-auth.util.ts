@@ -5,13 +5,22 @@ import { HiveConnectionService } from './hive-connection.service';
 import { HiveConnection } from './models/hive-connection.model';
 import { HiveEventData } from './models/hive-event-data.model';
 
+/**
+ * Helper class used for managing auth.
+ */
 export class HiveAuth {
   private static userService: IHiveSocketUserService;
 
+  /**
+   * Initialize Hive Socket User Service.
+   */
   public static init(userService: IHiveSocketUserService) {
     this.userService = userService;
   }
 
+  /**
+   * Validate if connection to a Hive Server is authorized.
+   */
   public static async connectionAuthorization(
     socket: Socket,
   ): Promise<void | Error> {
@@ -48,6 +57,9 @@ export class HiveAuth {
     }
   }
 
+  /**
+   * Validate if sender of an event is authenticated.
+   */
   public static messageAuthentication(
     data: HiveEventData,
     user: {
@@ -85,6 +97,9 @@ export class HiveAuth {
     return undefined;
   }
 
+  /**
+   * Create an event message signature.
+   */
   public static sign(
     data: HiveEventData,
     user: {
