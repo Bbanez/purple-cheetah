@@ -14,6 +14,8 @@ export * from './middleware/exception-handler.middleware';
 export * from './middleware/request-logger.middleware';
 
 export * from './interfaces/middleware.interface';
+export * from './interfaces/controller.interface';
+export * from './interfaces/exception-handler.interface';
 
 export * from './models/http-error.model';
 export * from './models/http-exception.model';

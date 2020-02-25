@@ -36,7 +36,7 @@ export function Application(config: {
    * Array of Controller Objects:
    * see [Controller](/globals.html#controller) from more info.
    */
-  controllers: IController[];
+  controllers: any[];
   /** Array of Middleware Objects:
    * see [Middleware](/interfaces/middleware.html) from more info.
    */
