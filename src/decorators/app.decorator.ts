@@ -3,7 +3,7 @@ import * as http from 'http';
 import { Middleware } from '../interfaces/middleware.interface';
 import { Logger } from '../logger';
 import { ExceptionHandler } from '../interfaces/exception-handler.interface';
-import { IController } from 'src/interfaces/controller.interface';
+import { IController } from '../interfaces/controller.interface';
 
 /**
  * Main entry point for Purple Cheetah application. This decorator

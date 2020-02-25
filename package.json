@@ -1,6 +1,6 @@
 {
   "name": "purple-cheetah",
-  "version": "1.0.63",
+  "version": "1.0.64",
   "description": "Framework for node/express applications. Do not use, still in development.",
   "main": "./index.js",
   "types": "./index.d.ts",
