@@ -174,7 +174,7 @@ export function EnableGraphQL(config: {
     if (rootQueryString !== '') {
       rootQuery = `
         """
-        Root Query for GetCV
+        Root Query for ${config.rootName}
         """
         type ${config.rootName}Query {
           ${rootQueryString}
@@ -184,7 +184,7 @@ export function EnableGraphQL(config: {
     if (rootMutationString !== '') {
       rootMutation = `
         """
-        Root Mutation for GetCV
+        Root Mutation for ${config.rootName}
         """
         type ${config.rootName}Mutation {
           ${rootMutationString}
