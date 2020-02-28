@@ -17,8 +17,15 @@ export function EnableGraphQL(config: {
   return (target: any) => {
     let stringObjects: string = '';
     if (config.objects) {
-      stringObjects = config.objects
-        .map(e => {
+      stringObjects = [
+        `
+        type ResponseError {
+          status: Int!
+          message: String!
+          payloadBase64: String
+        }
+        `,
+        ...config.objects.map(e => {
           if (e.description) {
             return `
               """
@@ -54,8 +61,8 @@ export function EnableGraphQL(config: {
               }
             `;
           }
-        })
-        .join('\n');
+        }),
+      ].join('\n');
     }
 
     let stringInputs: string = '';
