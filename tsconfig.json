@@ -14,7 +14,6 @@
   },
   "typedocOptions": {
     "name": "Purple Cheetah",
-    "theme": "minimal",
     "mode": "file",
     "out": "typedoc"
   },
