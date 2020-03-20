@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 
 export class FSUtil {
-  private static base = '';
+  private static base = '/';
 
   public static async save(data: string | Buffer, root: string) {
     const parts = root.split('/');
