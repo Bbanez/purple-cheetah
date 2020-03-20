@@ -1,4 +1,6 @@
+import * as path from 'path';
 import * as fs from 'fs';
+import { FSUtil } from './util/fs-util';
 
 /**
  * Used as a utility for Logger.
@@ -36,9 +38,14 @@ export enum ConsoleColors {
  */
 export class Logger {
   public component: string;
-  public static filePath?: string;
+  private static filePath?: string;
   constructor(component: string) {
     this.component = component;
+  }
+
+  public static async setLogPath(p: string) {
+    await FSUtil.save('', path.join(p, 'test.txt'));
+    this.filePath = p;
   }
 
   /**
@@ -140,16 +147,24 @@ export class Logger {
    * Outputs a message to a log file.
    */
   private output(s: string[]) {
+    const date = new Date();
     // tslint:disable-next-line: no-console
     console.log(s.join(' '));
     s = [...s, '\r\n'];
     if (Logger.filePath) {
-      fs.appendFile(Logger.filePath, s.join(' '), error => {
-        if (error) {
-          // tslint:disable-next-line: no-console
-          console.error(error);
-        }
-      });
+      fs.appendFile(
+        path.join(
+          Logger.filePath,
+          `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}.log`,
+        ),
+        s.join(' '),
+        error => {
+          if (error) {
+            // tslint:disable-next-line: no-console
+            console.error(error);
+          }
+        },
+      );
     }
   }
 }

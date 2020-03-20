@@ -24,6 +24,7 @@ export * from './models/factories/http-error.factory';
 
 export * from './util/object.util';
 export * from './util/string.util';
+export * from './util/fs-util';
 
 export * from './mongoose';
 export * from './ql';

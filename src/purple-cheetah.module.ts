@@ -21,7 +21,7 @@ export abstract class PurpleCheetah {
     staticContentDirectory: string;
   }) {
     this.logger = new Logger('App');
-    Logger.filePath = config.logFileLocation;
+    Logger.setLogPath(config.logFileLocation);
     this.staticContentDir = config.staticContentDirectory;
 
     this.controllers.forEach(controller => {
