@@ -6,6 +6,7 @@ serve.sh
 push-typedoc.sh
 bundle.sh
 publish.sh
+*.test.ts
 
 # Logs
 logs

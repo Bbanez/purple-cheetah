@@ -2,7 +2,7 @@ import * as BodyParser from 'body-parser';
 import { RequestHandler, ErrorRequestHandler } from 'express';
 import { MiddlewarePrototype } from '../interfaces';
 import { Logger } from '../logging';
-import { Middleware } from 'src/decorators';
+import { Middleware } from '../decorators';
 
 @Middleware({
   handler: BodyParser.json(),

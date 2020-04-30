@@ -1,6 +1,7 @@
 import { QLResolverType, QLResolverPrototype } from '../interfaces';
 import { QLArgPrototype } from '../interfaces';
 import { QLResponseWrapper } from '../response-wrapper';
+import { QLEntryBuffer } from '../buffer';
 
 export function QLResolver<T>(config: {
   description?: string;
@@ -33,6 +34,6 @@ export function QLResolver<T>(config: {
         });
       },
     };
-    target.prototype.get = resolver;
+    QLEntryBuffer.addResolver(resolver);
   };
 }

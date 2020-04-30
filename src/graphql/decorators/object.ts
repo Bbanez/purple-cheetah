@@ -1,7 +1,10 @@
 import { QLObjectPrototype } from '../interfaces';
+import { QLEntryBuffer } from '../buffer';
+import { QLResponseFactory } from '../factories';
 
 export function QLObject(config: QLObjectPrototype) {
   return (target: any) => {
-    target.prototype.get = config;
+    QLEntryBuffer.addObject(QLResponseFactory.create(config.name).object);
+    QLEntryBuffer.addObject(config);
   };
 }

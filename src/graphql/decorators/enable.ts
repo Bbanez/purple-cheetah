@@ -6,6 +6,7 @@ import {
   QLErrorSchema,
 } from '../interfaces';
 import { QLMiddleware } from '../middleware';
+import { QLEntryBuffer } from '../buffer';
 
 export function EnableGraphQL(config: {
   uri?: string;
@@ -16,6 +17,18 @@ export function EnableGraphQL(config: {
   graphiql: boolean;
 }) {
   return (target: any) => {
+    if (!config.objects) {
+      config.objects = [];
+    }
+    if (!config.inputs) {
+      config.inputs = [];
+    }
+    if (!config.resolvers) {
+      config.resolvers = [];
+    }
+    config.objects = [...config.objects, ...QLEntryBuffer.objects];
+    config.inputs = [...config.inputs, ...QLEntryBuffer.inputs];
+    config.resolvers = [...config.resolvers, ...QLEntryBuffer.resolvers];
     let stringObjects: string = '';
     if (config.objects) {
       stringObjects = [

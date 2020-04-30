@@ -7,3 +7,4 @@ export * from './logging';
 export * from './middleware';
 export * from './security';
 export * from './util';
+export * from './graphql';

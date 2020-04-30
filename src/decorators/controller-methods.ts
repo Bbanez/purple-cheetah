@@ -84,7 +84,6 @@ function build(
   const original = descriptor.value;
   descriptor.value = async (...args: any[]) => {
     try {
-      console.log('Args', args);
       if (options && options.security) {
         if (options.security.throwableFunctions) {
           for (const i in options.security.throwableFunctions) {

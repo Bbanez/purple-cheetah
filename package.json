@@ -6,7 +6,7 @@
   "types": "./index.d.ts",
   "scripts": {
     "start": "node dist/main.js",
-    "dev": "nodemon src/test.ts",
+    "dev": "nodemon test/main.ts",
     "node-dev": "node src/main.ts",
     "build": "tsc -p .",
     "typedoc-generate": "typedoc",
