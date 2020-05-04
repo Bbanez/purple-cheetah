@@ -1,4 +1,5 @@
 import { QLArgPrototype } from './ql-arg-prototype';
+import { QLResponse } from './ql-response';
 
 export enum QLResolverType {
   QUERY = 'QUERY',
@@ -12,6 +13,6 @@ export interface QLResolverPrototype {
     args?: QLArgPrototype[];
     returnType: string;
   };
-  resolver: (args: any) => Promise<any>;
+  resolver: (args: any) => Promise<QLResponse<any>>;
   description?: string;
 }

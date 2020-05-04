@@ -1,7 +1,6 @@
 import { QLResolverType, QLResolverPrototype } from '../interfaces';
 import { QLArgPrototype } from '../interfaces';
 import { QLResponseWrapper } from '../response-wrapper';
-import { QLEntryBuffer } from '../buffer';
 
 export function QLResolver<T>(config: {
   description?: string;
@@ -22,7 +21,10 @@ export function QLResolver<T>(config: {
       },
       resolver: async (args: any) => {
         return await QLResponseWrapper.wrap<T>(async () => {
-          const result = await config.resolver(...args);
+          const a: any[] = config.args.map((e) => {
+            return args[e.name];
+          });
+          const result = await config.resolver(...a);
           if (result instanceof Array) {
             return {
               edges: result,
@@ -34,6 +36,11 @@ export function QLResolver<T>(config: {
         });
       },
     };
-    QLEntryBuffer.addResolver(resolver);
+    target.prototype.description = resolver.description;
+    target.prototype.name = resolver.name;
+    target.prototype.type = resolver.type;
+    target.prototype.root = resolver.root;
+    target.prototype.resolver = resolver.resolver;
+    // QLEntryBuffer.addResolver(resolver);
   };
 }

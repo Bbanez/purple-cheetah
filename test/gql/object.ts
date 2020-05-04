@@ -1,6 +1,20 @@
-import { QLObject, QLResponseFactory } from "src";
+import { QLObject, QLObjectPrototype, QLFieldPrototype } from '../../src';
+
+export interface Test {
+  test: string;
+}
 
 @QLObject({
-  name: QLResponseFactory.create('Test').name,
+  name: 'Test',
 })
-export class TestQLObject {}
+export class TestQLObject implements QLObjectPrototype {
+  name: string;
+  type?: string;
+  fields: QLFieldPrototype[] = [
+    {
+      name: 'test',
+      type: 'String!',
+    },
+  ];
+  description?: string = 'This is object description.';
+}

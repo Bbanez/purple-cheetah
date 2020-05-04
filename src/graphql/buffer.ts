@@ -5,6 +5,17 @@ import {
 } from './interfaces';
 
 export class QLEntryBuffer {
+  public static graphQLConfig: {
+    use: boolean;
+    config?: {
+      uri: string;
+      graphiql: boolean;
+      schema: string;
+      rootValue: string;
+    };
+  } = {
+    use: false,
+  };
   public static objects: QLObjectPrototype[] = [];
   public static inputs: QLInputPrototype[] = [];
   public static resolvers: QLResolverPrototype[] = [];
