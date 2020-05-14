@@ -1,12 +1,12 @@
 import * as path from 'path';
 import * as YAML from 'yamljs';
+import { ObjectUtility } from '../../util';
 import {
   MiracleKeyStoreConfig,
   MiracleKeyStoreConfigSchema,
-  MiracleKeyStoreConfigCache,
-  MiracleKeyStoreController,
-} from '../key-store';
-import { ObjectUtility } from '../../util';
+} from '../interfaces';
+import { MiracleKeyStoreConfigCache } from '../cache';
+import { MiracleKeyStoreController } from '../controllers';
 
 export function EnableMiracleKeyStore(config: { configFilePath: string }) {
   return async (target: any) => {

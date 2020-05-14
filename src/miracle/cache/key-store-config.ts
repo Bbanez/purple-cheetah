@@ -1,7 +1,7 @@
 import {
   MiracleKeyStoreConfig,
   MiracleServiceKeyStoreConfig,
-} from './interfaces';
+} from '../interfaces';
 
 export class MiracleKeyStoreConfigCache {
   private static cache: MiracleKeyStoreConfig;

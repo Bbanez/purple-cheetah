@@ -4,8 +4,7 @@ import { Request } from 'express';
 import { CreateLogger, Logger } from '../../logging';
 import { HttpErrorFactory } from '../../factories';
 import { ObjectUtility } from '../../util';
-import { HttpStatus } from 'src/interfaces';
-import { MiracleKeyStoreConfigCache } from './config-cache';
+import { HttpStatus } from '../../interfaces';
 
 @Controller('/miracle/key-store')
 export class MiracleKeyStoreController {

@@ -12,14 +12,6 @@ export interface MiracleKeyStoreConfig {
       from: string[];
     }>;
   }>;
-  // rules: Array<{
-  //   name: string;
-  //   incoming: Array<{
-  //     method: string;
-  //     path: string;
-  //     from: string[];
-  //   }>;
-  // }>;
 }
 
 export const MiracleKeyStoreConfigSchema = {
