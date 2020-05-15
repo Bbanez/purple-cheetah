@@ -5,6 +5,7 @@ import { CreateLogger, Logger } from '../../logging';
 import { HttpErrorFactory } from '../../factories';
 import { ObjectUtility } from '../../util';
 import { HttpStatus } from '../../interfaces';
+import { MiracleKeyStoreConfigCache } from '../cache';
 
 @Controller('/miracle/key-store')
 export class MiracleKeyStoreController {

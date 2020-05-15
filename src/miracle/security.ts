@@ -9,9 +9,38 @@ export class MiracleSecurity {
       iv: string;
       key: Buffer;
     };
+    policy: {
+      incoming: Array<{
+        method: string;
+        path: string;
+        from: string[];
+      }>;
+      outgoing: Array<{
+        name: string;
+        method: string;
+        path: string;
+      }>;
+    };
   };
 
-  constructor(key: string, secret: string, IV: string, AESPass: string) {
+  constructor(
+    key: string,
+    secret: string,
+    IV: string,
+    AESPass: string,
+    policy: {
+      incoming: Array<{
+        method: string;
+        path: string;
+        from: string[];
+      }>;
+      outgoing: Array<{
+        name: string;
+        method: string;
+        path: string;
+      }>;
+    },
+  ) {
     this.config = {
       key,
       secret,
@@ -19,6 +48,7 @@ export class MiracleSecurity {
         key: crypto.scryptSync(AESPass, 'salt', 32),
         iv: IV,
       },
+      policy,
     };
   }
 
@@ -43,6 +73,36 @@ export class MiracleSecurity {
       .digest()
       .toString('hex');
     return request;
+  }
+
+  public checkIncomingPolicy(
+    key: string,
+    uri: string,
+    method: string,
+  ): boolean {
+    return this.config.policy.incoming.find(
+      (incoming) =>
+        incoming.method === method &&
+        incoming.path === uri &&
+        incoming.from.find((from) => from === key),
+    )
+      ? true
+      : false;
+  }
+
+  public checkOutgoingPolicy(
+    name: string,
+    uri: string,
+    method: string,
+  ): boolean {
+    return this.config.policy.outgoing.find(
+      (outgoing) =>
+        outgoing.method === method &&
+        outgoing.path === uri &&
+        outgoing.name === name,
+    )
+      ? true
+      : false;
   }
 
   public process(request: MiracleRequest): any {

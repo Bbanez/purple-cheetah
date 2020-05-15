@@ -32,6 +32,7 @@
     "fs-extra": "^8.1.0",
     "graphql": "^14.6.0",
     "mongoose": "^5.9.5",
+    "node-os-utils": "^1.2.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "yamljs": "^0.3.0"
@@ -46,6 +47,7 @@
     "@types/graphql": "^14.5.0",
     "@types/mongoose": "^5.7.14",
     "@types/node": "^12.12.37",
+    "@types/node-os-utils": "^1.2.0",
     "@types/socket.io": "^2.1.4",
     "@types/socket.io-client": "^1.4.32",
     "@types/yamljs": "^0.2.30",

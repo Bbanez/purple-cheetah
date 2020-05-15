@@ -58,7 +58,7 @@ export class MiracleRegistryServerCache {
     }
   }
 
-  public static findAll() {
+  public static findAll(): MiracleRegistry[] {
     return JSON.parse(JSON.stringify(this.registries));
   }
 
