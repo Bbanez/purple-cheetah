@@ -6,6 +6,7 @@ import { MiracleSecurity } from '../security';
 import { Miracle } from '../miracle';
 import { Logger } from '../../logging';
 import { MiracleHeartbeatController } from '../controllers/heartbeat';
+import { Types } from 'mongoose';
 
 export function MiracleConnect(config: {
   keyStore: {
@@ -24,8 +25,7 @@ export function MiracleConnect(config: {
     };
   };
 }) {
-  return async (target: any) => {
-    const logger = new Logger('MiracleConnect');
+  const init = async (target: any, logger: Logger) => {
     let security: MiracleSecurity;
     {
       logger.info('', 'Connecting to Miracle Key Store .....');
@@ -36,12 +36,11 @@ export function MiracleConnect(config: {
         signature: '',
       };
       data.signature = crypto
-        .createHmac('sha-256', config.keyStore.auth.secret)
+        .createHmac('sha256', config.keyStore.auth.secret)
         .update(data.timestamp + data.nonce + data.key)
-        .digest()
-        .toString('hex');
+        .digest('hex');
       const keyStoreAuthResult = await Axios({
-        url: `${origin}/miracle/key-store/auth`,
+        url: `${config.keyStore.origin}/miracle/key-store/auth`,
         method: 'POST',
         data,
       });
@@ -77,5 +76,26 @@ export function MiracleConnect(config: {
         new MiracleHeartbeatController(security),
       );
     }
+  };
+
+  return (target: any) => {
+    const id = Types.ObjectId();
+    target.prototype.queue.push({
+      id,
+      state: false,
+    });
+    const logger = new Logger('MiracleConnect');
+    init(target, logger)
+      .then(() => {
+        target.prototype.queue.forEach((e) => {
+          if (e.id === id) {
+            e.state = true;
+          }
+        });
+      })
+      .catch((error) => {
+        logger.error('', error);
+        process.exit(1);
+      });
   };
 }

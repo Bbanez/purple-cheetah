@@ -7,6 +7,12 @@
   "scripts": {
     "start": "node dist/main.js",
     "dev": "nodemon test/main.ts",
+    "dev-ks": "nodemon test/key-store/main.ts",
+    "test-ks": "ts-node test/key-store/main.ts",
+    "dev-reg": "nodemon test/registry/main.ts",
+    "test-reg": "ts-node test/registry/main.ts",
+    "dev-ms1": "nodemon test/ms1/main.ts",
+    "test-ms2": "ts-node test/ms1/main.ts",
     "node-dev": "node src/main.ts",
     "build": "tsc -p .",
     "typedoc-generate": "typedoc",

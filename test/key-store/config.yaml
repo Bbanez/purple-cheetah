@@ -1,0 +1,29 @@
+secret: 'secret'
+iv: '@McQfTjWnZr4u7x!A%D*G-JaNdRgUkXp'
+pass: 'NcRfUjXn2r5u8x/A?D(G-KaPdSgVkYp3'
+services:
+  - name: 'reg'
+    key: '1'
+    secret: 'reg'
+    incomingPolicy:
+      - method: 'POST'
+        path: '/miracle/registry/register'
+        from:
+          - 'ms1'
+          - 'ms2'
+  - name: 'ms1'
+    key: '2'
+    secret: 'ms1'
+    incomingPolicy:
+      - method: 'GET'
+        path: '/test'
+        from:
+          - 'ms2'
+  - name: 'ms2'
+    key: '3'
+    secret: 'ms2'
+    incomingPolicy:
+      - method: 'GET'
+        path: '/test'
+        from:
+          - 'ms1'

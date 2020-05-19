@@ -55,7 +55,7 @@ export const MiracleKeyStoreConfigSchema = {
                 __type: 'string',
                 __required: true,
               },
-              type: {
+              path: {
                 __type: 'string',
                 __required: true,
               },

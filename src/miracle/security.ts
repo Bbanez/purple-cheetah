@@ -68,10 +68,9 @@ export class MiracleSecurity {
     request.payload = this.encrypt(request.payload);
     request.timestamp = Date.now();
     request.signature = crypto
-      .createHmac('sha-256', this.config.secret)
+      .createHmac('sha256', this.config.secret)
       .update(request.timestamp + request.nonce + request.key + request.payload)
-      .digest()
-      .toString('hex');
+      .digest('hex');
     return request;
   }
 
@@ -118,10 +117,9 @@ export class MiracleSecurity {
       throw new Error('Timestamp is out of range.');
     }
     const checkSignature = crypto
-      .createHmac('sha-256', this.config.secret)
+      .createHmac('sha256', this.config.secret)
       .update(request.timestamp + request.nonce + request.key + request.payload)
-      .digest()
-      .toString('hex');
+      .digest('hex');
     if (checkSignature !== request.signature) {
       throw new Error('Invalid signature.');
     }

@@ -32,7 +32,7 @@ export class MiracleKeyStoreConfigCache {
         conf.policy.incoming = service.incomingPolicy;
       } else {
         const inc = service.incomingPolicy.find((incoming) =>
-          incoming.from.includes(name),
+          incoming.from.includes(service.name),
         );
         if (inc) {
           conf.policy.outgoing.push({

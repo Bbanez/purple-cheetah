@@ -20,6 +20,7 @@ export function Application(config: {
     target.prototype.logger = new Logger('PurpleCheetah');
     target.prototype.app = express();
     target.prototype.server = http.createServer(target.prototype.app);
+    target.prototype.queue = [];
     if (target.prototype.controllers) {
       target.prototype.controllers = [
         ...target.prototype.controllers,

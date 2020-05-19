@@ -2,9 +2,9 @@ import { Controller, Post } from '../../decorators';
 import { CreateLogger, Logger } from '../../logging';
 import { Request } from 'express';
 import { MiracleRegistry, MiracleRequestSchema } from '../interfaces';
-import { HttpErrorFactory } from 'src/factories';
-import { HttpStatus } from 'src/interfaces';
-import { ObjectUtility } from 'src/util';
+import { HttpErrorFactory } from '../../factories';
+import { HttpStatus } from '../../interfaces';
+import { ObjectUtility } from '../../util';
 import { MiracleSecurity } from '../security';
 import { MiracleRegistryServerCache } from '../cache';
 

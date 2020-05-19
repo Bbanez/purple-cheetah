@@ -49,10 +49,9 @@ export class MiracleKeyStoreController {
       throw error.occurred(HttpStatus.FORBIDDEN, 'Invalid key was provided.');
     }
     const checkSignature = crypto
-      .createHmac('sha-256', service.secret)
+      .createHmac('sha256', service.secret)
       .update(request.body.timestamp + request.body.nonce + service.key)
-      .digest()
-      .toString('hex');
+      .digest('hex');
     if (checkSignature !== request.body.signature) {
       throw error.occurred(HttpStatus.FORBIDDEN, 'Invalid signature.');
     }

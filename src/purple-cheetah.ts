@@ -9,6 +9,10 @@ export abstract class PurpleCheetah {
   protected logger: Logger;
   protected controllers: ControllerPrototype[];
   protected middleware: MiddlewarePrototype[];
+  protected queue: Array<{
+    id: string;
+    state: boolean;
+  }> = [];
 
   public listen: () => void;
 
@@ -24,10 +28,14 @@ export abstract class PurpleCheetah {
     this.controllers.forEach((controller) => {
       controller.initRouter();
     });
-
-    this.initializeMiddleware(this.middleware, false);
-    this.initializeControllers(this.controllers);
-    this.initializeMiddleware(this.middleware, true);
+    const waitForQueue = setInterval(() => {
+      if (!this.queue.find((e) => e.state === false)) {
+        this.initializeMiddleware(this.middleware, false);
+        this.initializeControllers(this.controllers);
+        this.initializeMiddleware(this.middleware, true);
+        clearInterval(waitForQueue);
+      }
+    }, 50);
   }
 
   private initializeMiddleware(

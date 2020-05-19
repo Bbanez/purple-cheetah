@@ -9,7 +9,7 @@ import { MiracleKeyStoreConfigCache } from '../cache';
 import { MiracleKeyStoreController } from '../controllers';
 
 export function EnableMiracleKeyStore(config: { configFilePath: string }) {
-  return async (target: any) => {
+  return (target: any) => {
     let conf: MiracleKeyStoreConfig;
     {
       if (config.configFilePath.startsWith('/') === true) {

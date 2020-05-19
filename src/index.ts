@@ -8,3 +8,4 @@ export * from './middleware';
 export * from './security';
 export * from './util';
 export * from './graphql';
+export * from './miracle';
