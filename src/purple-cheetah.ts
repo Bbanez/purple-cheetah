@@ -25,11 +25,12 @@ export abstract class PurpleCheetah {
     Logger.setLogPath(config.logFileLocation);
     this.staticContentDir = config.staticContentDirectory;
 
-    this.controllers.forEach((controller) => {
-      controller.initRouter();
-    });
     const waitForQueue = setInterval(() => {
       if (!this.queue.find((e) => e.state === false)) {
+        this.logger.info('', 'Queue empty, continue with mounting.');
+        this.controllers.forEach((controller) => {
+          controller.initRouter();
+        });
         this.initializeMiddleware(this.middleware, false);
         this.initializeControllers(this.controllers);
         this.initializeMiddleware(this.middleware, true);
@@ -59,7 +60,7 @@ export abstract class PurpleCheetah {
     });
   }
 
-  private initializeControllers(controllers: any[]) {
+  private initializeControllers(controllers: ControllerPrototype[]) {
     this.app.use(express.static(this.staticContentDir));
     controllers.forEach((controller) => {
       this.app.use(controller.baseUri, controller.router);

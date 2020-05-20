@@ -2,6 +2,23 @@ import { MiracleRegistry } from '../interfaces';
 
 export class MiracleRegistryServerCache {
   private static registries: MiracleRegistry[] = [];
+  private static checkInterval: NodeJS.Timeout;
+
+  public static init() {
+    clearInterval(this.checkInterval);
+    this.checkInterval = setInterval(() => {
+      this.registries.forEach((registry) => {
+        registry.instances.forEach((instance) => {
+          if (
+            instance.available === true &&
+            instance.stats.lastCheck < Date.now() - 30000
+          ) {
+            instance.available = false;
+          }
+        });
+      });
+    }, 30000);
+  }
 
   public static add(registry: {
     name: string;

@@ -1,4 +1,4 @@
-import { Controller, Post } from '../../decorators';
+import { Controller, Post, Get } from '../../decorators';
 import { CreateLogger, Logger } from '../../logging';
 import { Request } from 'express';
 import { MiracleRegistry, MiracleRequestSchema } from '../interfaces';
@@ -12,8 +12,28 @@ import { MiracleRegistryServerCache } from '../cache';
 export class MiracleRegistryController {
   @CreateLogger(MiracleRegistryController)
   private logger: Logger;
+  private static security: MiracleSecurity;
 
-  constructor(private security: MiracleSecurity) {}
+  public static initSecurity(security: MiracleSecurity) {
+    MiracleRegistryController.security = security;
+  }
+
+  @Get('')
+  async registry(request: Request): Promise<{ registry: any }> {
+    // const error = HttpErrorFactory.instance('.stats', this.logger);
+    // try {
+    //   ObjectUtility.compareWithSchema(
+    //     request.body,
+    //     MiracleRequestSchema,
+    //     'body',
+    //   );
+    // } catch (e) {
+    //   throw error.occurred(HttpStatus.BAD_REQUEST, e.message);
+    // }
+    return {
+      registry: MiracleRegistryServerCache.findAll(),
+    };
+  }
 
   @Post('/register')
   async register(request: Request): Promise<{ registry: MiracleRegistry[] }> {
@@ -39,7 +59,7 @@ export class MiracleRegistryController {
       };
     };
     try {
-      payload = this.security.process(request.body);
+      payload = MiracleRegistryController.security.process(request.body);
     } catch (e) {
       throw error.occurred(HttpStatus.FORBIDDEN, e.message);
     }

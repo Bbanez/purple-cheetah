@@ -9,22 +9,22 @@ export interface MiracleRequest {
 export const MiracleRequestSchema = {
   key: {
     __type: 'string',
-    required: true,
+    __required: true,
   },
   nonce: {
     __type: 'string',
-    required: true,
+    __required: true,
   },
   timestamp: {
     __type: 'number',
-    required: true,
+    __required: true,
   },
   signature: {
     __type: 'string',
-    required: true,
+    __required: true,
   },
   payload: {
     __type: 'string',
-    required: true,
+    __required: true,
   },
 };

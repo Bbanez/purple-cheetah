@@ -5,6 +5,7 @@ import { MiracleSecurity } from '../security';
 import { MiracleServiceKeyStoreConfig } from '../interfaces';
 import { MiracleRegistryController } from '../controllers';
 import { Types } from 'mongoose';
+import { MiracleRegistryServerCache } from '../cache';
 
 export function EnableMiracleRegistry(config: {
   keyStore: {
@@ -15,10 +16,9 @@ export function EnableMiracleRegistry(config: {
     };
   };
 }) {
-  const init = async (target: any, logger: Logger) => {
+  const init = async () => {
     let security: MiracleSecurity;
     {
-      logger.info('', 'Connecting to Miracle Key Store .....');
       const data = {
         nonce: crypto.randomBytes(6).toString('hex'),
         timestamp: Date.now(),
@@ -37,21 +37,16 @@ export function EnableMiracleRegistry(config: {
       const keyStoreConfig: MiracleServiceKeyStoreConfig =
         keyStoreAuthResult.data;
       security = new MiracleSecurity(
+        keyStoreConfig.name,
         keyStoreConfig.key,
         keyStoreConfig.secret,
         keyStoreConfig.iv,
         keyStoreConfig.pass,
         keyStoreConfig.policy,
       );
-      logger.info('', 'Connection to Miracle Key Store was successful.');
     }
-    if (!target.prototype.controllers) {
-      target.prototype.controllers = [new MiracleRegistryController(security)];
-    } else {
-      target.prototype.controllers.push(
-        new MiracleRegistryController(security),
-      );
-    }
+    MiracleRegistryServerCache.init();
+    MiracleRegistryController.initSecurity(security);
   };
 
   return (target: any) => {
@@ -61,8 +56,18 @@ export function EnableMiracleRegistry(config: {
       id,
       state: false,
     });
-    init(target, logger)
+    logger.info('', 'Connecting to Miracle Key Store .....');
+    init()
       .then(() => {
+        logger.info('', 'Connection to Miracle Key Store was successful.');
+        setInterval(async () => {
+          await init();
+        }, 60000);
+        if (!target.prototype.controllers) {
+          target.prototype.controllers = [new MiracleRegistryController()];
+        } else {
+          target.prototype.controllers.push(new MiracleRegistryController());
+        }
         target.prototype.queue.forEach((e) => {
           if (e.id === id) {
             e.state = true;

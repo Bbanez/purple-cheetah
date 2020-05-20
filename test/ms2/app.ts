@@ -11,14 +11,14 @@ import { Test } from './controller';
   keyStore: {
     origin: 'http://localhost:1280',
     auth: {
-      key: '2',
-      secret: 'ms1',
+      key: '3',
+      secret: 'ms2',
     },
   },
   registry: {
     origin: 'http://localhost:1281',
     service: {
-      name: 'ms1',
+      name: 'ms2',
       origin: `http://localhost:${process.env.PORT}`,
       ssl: false,
     },

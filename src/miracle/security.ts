@@ -1,8 +1,11 @@
 import * as crypto from 'crypto';
-import { MiracleRequest } from './interfaces';
+import { MiracleRequest, MiracleRequestSchema } from './interfaces';
+import { ObjectUtility } from '../util';
+import { Request } from 'express';
 
 export class MiracleSecurity {
   private config?: {
+    name: string;
     key: string;
     secret: string;
     aes: {
@@ -24,6 +27,7 @@ export class MiracleSecurity {
   };
 
   constructor(
+    name: string,
     key: string,
     secret: string,
     IV: string,
@@ -42,6 +46,7 @@ export class MiracleSecurity {
     },
   ) {
     this.config = {
+      name,
       key,
       secret,
       aes: {
@@ -54,7 +59,7 @@ export class MiracleSecurity {
 
   public sign(payload: any): MiracleRequest {
     const request: MiracleRequest = {
-      key: this.config.key,
+      key: this.config.name,
       nonce: crypto.randomBytes(6).toString('hex'),
       timestamp: 0,
       payload: '',
@@ -105,6 +110,7 @@ export class MiracleSecurity {
   }
 
   public process(request: MiracleRequest): any {
+    ObjectUtility.compareWithSchema(request, MiracleRequestSchema, 'request');
     if (typeof request.timestamp !== 'number') {
       throw new Error(
         `Expected property "timestamp" to be a number but got "${typeof request.timestamp}".`,
@@ -128,6 +134,47 @@ export class MiracleSecurity {
       return JSON.parse(payload);
     } catch {
       return payload;
+    }
+  }
+
+  public processRequest<T>(expressRequest: Request): T {
+    const request: MiracleRequest = expressRequest.body;
+    ObjectUtility.compareWithSchema(request, MiracleRequestSchema, 'request');
+    if (
+      this.checkIncomingPolicy(
+        request.key,
+        expressRequest.originalUrl,
+        expressRequest.method,
+      ) === false
+    ) {
+      throw new Error(
+        `Key "${request.key}" is not authorized to access` +
+          `"${expressRequest.method}: ${expressRequest.originalUrl}" resource.`,
+      );
+    }
+    if (typeof request.timestamp !== 'number') {
+      throw new Error(
+        `Expected property "timestamp" to be a number but got "${typeof request.timestamp}".`,
+      );
+    }
+    if (
+      request.timestamp < Date.now() - 3000 ||
+      request.timestamp > Date.now() + 1000
+    ) {
+      throw new Error('Timestamp is out of range.');
+    }
+    const checkSignature = crypto
+      .createHmac('sha256', this.config.secret)
+      .update(request.timestamp + request.nonce + request.key + request.payload)
+      .digest('hex');
+    if (checkSignature !== request.signature) {
+      throw new Error('Invalid signature.');
+    }
+    const payload = this.decrypt(request.payload);
+    try {
+      return JSON.parse(payload);
+    } catch {
+      return payload as any;
     }
   }
 

@@ -15,7 +15,7 @@ services:
     key: '2'
     secret: 'ms1'
     incomingPolicy:
-      - method: 'GET'
+      - method: 'POST'
         path: '/test'
         from:
           - 'ms2'
@@ -23,7 +23,7 @@ services:
     key: '3'
     secret: 'ms2'
     incomingPolicy:
-      - method: 'GET'
+      - method: 'POST'
         path: '/test'
         from:
           - 'ms1'

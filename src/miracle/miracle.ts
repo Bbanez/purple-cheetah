@@ -2,6 +2,7 @@ import * as osu from 'node-os-utils';
 import { MiracleRegistryExtended } from './interfaces';
 import Axios, { Method } from 'axios';
 import { MiracleSecurity } from './security';
+import { Request } from 'express';
 
 export class Miracle {
   private static security: MiracleSecurity;
@@ -70,22 +71,19 @@ export class Miracle {
   public static async request(config: {
     service: string;
     uri: string;
-    method: Method;
     headers?: any;
     queries?: any;
     data?: any;
   }) {
+    const method = 'POST';
     if (
-      this.security.checkOutgoingPolicy(
-        config.service,
-        config.uri,
-        config.method,
-      ) === false
+      this.security.checkOutgoingPolicy(config.service, config.uri, method) ===
+      false
     ) {
       throw new Error(
         `Service with name "${config.service}" is not ` +
           `listed in outgoing policy for ` +
-          `"${config.method}: ${config.uri}".`,
+          `"${method}: ${config.uri}".`,
       );
     }
     this.checkSecurity();
@@ -111,15 +109,20 @@ export class Miracle {
         break;
       }
     }
+    const signature = this.security.sign(config.data);
     const result = await Axios({
       url: `${instance.origin}${config.uri}`,
-      method: config.method,
+      method,
       headers: config.headers,
-      data: this.security.sign(config.data),
+      data: signature,
     });
     return {
       data: result.data,
       headers: result.headers,
     };
+  }
+
+  public static process<T>(request: Request): T {
+    return this.security.processRequest<T>(request);
   }
 }

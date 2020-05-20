@@ -14,10 +14,10 @@ export class MiracleKeyStoreConfigCache {
     return JSON.parse(JSON.stringify(this.cache));
   }
 
-  public static byKey(key: string): MiracleServiceKeyStoreConfig {
+  public static byName(name: string): MiracleServiceKeyStoreConfig {
     const conf: MiracleServiceKeyStoreConfig = {
-      name: '',
-      key,
+      name,
+      key: '',
       secret: this.cache.secret,
       iv: this.cache.iv,
       pass: this.cache.pass,
@@ -27,12 +27,12 @@ export class MiracleKeyStoreConfigCache {
       },
     };
     this.cache.services.forEach((service) => {
-      if (service.key === key) {
-        conf.name = service.name;
+      if (service.name === name) {
+        conf.key = service.key;
         conf.policy.incoming = service.incomingPolicy;
       } else {
         const inc = service.incomingPolicy.find((incoming) =>
-          incoming.from.includes(service.name),
+          incoming.from.includes(name),
         );
         if (inc) {
           conf.policy.outgoing.push({

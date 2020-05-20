@@ -55,6 +55,7 @@ export class MiracleKeyStoreController {
     if (checkSignature !== request.body.signature) {
       throw error.occurred(HttpStatus.FORBIDDEN, 'Invalid signature.');
     }
-    return MiracleKeyStoreConfigCache.byKey(service.key);
+    const keyStore = MiracleKeyStoreConfigCache.byName(service.name);
+    return keyStore;
   }
 }

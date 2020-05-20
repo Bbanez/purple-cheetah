@@ -25,10 +25,10 @@ export function MiracleConnect(config: {
     };
   };
 }) {
-  const init = async (target: any, logger: Logger) => {
+
+  const initKeyStore = async () => {
     let security: MiracleSecurity;
     {
-      logger.info('', 'Connecting to Miracle Key Store .....');
       const data = {
         nonce: crypto.randomBytes(6).toString('hex'),
         timestamp: Date.now(),
@@ -47,16 +47,25 @@ export function MiracleConnect(config: {
       const keyStoreConfig: MiracleServiceKeyStoreConfig =
         keyStoreAuthResult.data;
       security = new MiracleSecurity(
+        keyStoreConfig.name,
         keyStoreConfig.key,
         keyStoreConfig.secret,
         keyStoreConfig.iv,
         keyStoreConfig.pass,
         keyStoreConfig.policy,
       );
-      logger.info('', 'Connection to Miracle Key Store was successful.');
     }
-    logger.info('', 'Connecting to Miracle Registry .....');
     Miracle.init(security);
+    // if (!target.prototype.controllers) {
+    //   target.prototype.controllers = [new MiracleHeartbeatController(security)];
+    // } else {
+    //   target.prototype.controllers.push(
+    //     new MiracleHeartbeatController(security),
+    //   );
+    // }
+  };
+
+  const initRegistry = async () => {
     await Miracle.register(config.registry.origin, {
       name: config.registry.service.name,
       heartbeat: '/miracle/heartbeat',
@@ -68,14 +77,6 @@ export function MiracleConnect(config: {
         lastCheck: Date.now(),
       },
     });
-    logger.info('', 'Connection to Miracle Registry was successful.');
-    if (!target.prototype.controllers) {
-      target.prototype.controllers = [new MiracleHeartbeatController(security)];
-    } else {
-      target.prototype.controllers.push(
-        new MiracleHeartbeatController(security),
-      );
-    }
   };
 
   return (target: any) => {
@@ -85,8 +86,20 @@ export function MiracleConnect(config: {
       state: false,
     });
     const logger = new Logger('MiracleConnect');
-    init(target, logger)
-      .then(() => {
+    logger.info(
+      '',
+      'Connecting to Miracle Key Store and Miracle Registry .....',
+    );
+    initKeyStore()
+      .then(async () => {
+        await initRegistry();
+        logger.info('', 'Connection was successful.');
+        setInterval(async () => {
+          await initRegistry();
+        }, 15000);
+        setInterval(async () => {
+          await initKeyStore();
+        }, 60000);
         target.prototype.queue.forEach((e) => {
           if (e.id === id) {
             e.state = true;
