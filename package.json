@@ -1,6 +1,6 @@
 {
   "name": "purple-cheetah",
-  "version": "1.0.77",
+  "version": "1.0.78",
   "description": "Framework for node/express applications.",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -31,28 +31,28 @@
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "fs-extra": "^8.1.0",
-    "graphql": "^14.6.0",
-    "mongoose": "^5.9.5",
+    "graphql": "^14.7.0",
+    "mongoose": "^5.10.3",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/body-parser": "^1.19.0",
-    "@types/cors": "^2.8.5",
+    "@types/cors": "^2.8.7",
     "@types/eureka-js-client": "^4.5.2",
-    "@types/express": "^4.17.3",
+    "@types/express": "^4.17.8",
     "@types/express-graphql": "^0.8.2",
-    "@types/fs-extra": "^8.1.0",
+    "@types/fs-extra": "^8.1.1",
     "@types/graphql": "^14.5.0",
-    "@types/mongoose": "^5.7.7",
-    "@types/node": "^12.12.30",
-    "@types/socket.io": "^2.1.4",
-    "@types/socket.io-client": "^1.4.32",
-    "nodemon": "^2.0.2",
-    "ts-node": "^8.7.0",
+    "@types/mongoose": "^5.7.36",
+    "@types/node": "^12.12.56",
+    "@types/socket.io": "^2.1.11",
+    "@types/socket.io-client": "^1.4.33",
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^5.20.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.7"
   }
 }
